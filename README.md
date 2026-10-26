@@ -1,3 +1,5 @@
+[![Русский README](https://img.shields.io/badge/README-%D0%A0%D1%83%D1%81%D1%81%D0%BA%D0%B8%D0%B9-blue?style=for-the-badge)](README.ru.md)
+
 # kamputa browser
 
 Firefox-based browser for Linux with a compact Chromium / Helium inspired interface and a local pixel pet. This is a repack of the official Mozilla runtime with published interface customizations, not a separately compiled Gecko engine. It is an independent project, not endorsed by Mozilla.
