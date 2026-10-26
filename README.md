@@ -32,9 +32,9 @@
 
 Download the package for your system from [Releases](https://github.com/Artemnuhka/kamputa-browser/releases):
 
-- **[RPM](https://github.com/Artemnuhka/kamputa-browser/releases/download/v0.5.3/kamputa-browser-0.5.3-1.x86_64.rpm) (x86_64):** Fedora and openSUSE. Install through your package manager, which resolves the shared-library dependencies.
-- **[DEB](https://github.com/Artemnuhka/kamputa-browser/releases/download/v0.5.3/kamputa-browser_0.5.3_amd64.deb) (amd64):** Debian / Ubuntu. Use `sudo apt install ./kamputa-browser_0.5.3_amd64.deb`.
-- **[AppImage](https://github.com/Artemnuhka/kamputa-browser/releases/download/v0.5.3/kamputa-browser-0.5.3-x86_64.AppImage) (x86_64):** make it executable, then run it. If FUSE is unavailable, use `./kamputa-browser-0.5.3-x86_64.AppImage --appimage-extract-and-run`.
+- **[RPM](https://github.com/Artemnuhka/kamputa-browser/releases/download/v0.6.0/kamputa-browser-0.6.0-1.x86_64.rpm) (x86_64):** Fedora and openSUSE. Install through your package manager, which resolves the shared-library dependencies.
+- **[DEB](https://github.com/Artemnuhka/kamputa-browser/releases/download/v0.6.0/kamputa-browser_0.6.0_amd64.deb) (amd64):** Debian / Ubuntu. Use `sudo apt install ./kamputa-browser_0.6.0_amd64.deb`.
+- **[AppImage](https://github.com/Artemnuhka/kamputa-browser/releases/download/v0.6.0/kamputa-browser-0.6.0-x86_64.AppImage) (x86_64):** make it executable, then run it. If FUSE is unavailable, use `./kamputa-browser-0.6.0-x86_64.AppImage --appimage-extract-and-run`.
 
 **Dependencies:**
 
@@ -50,7 +50,7 @@ Download the package for your system from [Releases](https://github.com/Artemnuh
 - **Interface.** Compact dark tabs and toolbar; classic layout is also available.
 - **Themes and palettes.** Native Firefox themes with presets and custom colors; Russian and English Kamputa strings follow the browser language.
 - **First run.** First-run import, search, theme, optional Mozilla login and password-manager choices; the pet introduction requires a name.
-- **Your pet.** A local pet with feeding, play, sleep, walking and laptop animations. Its state stays in the profile; it does not read websites or browsing history.
+- **Your pet.** A local Tamagotchi companion: hunger, energy, mood, grooming and friendship; two interactive games, daily care rewards, rooms, decorations, a journal and achievements. Existing names and progress carry over. Its state stays in the profile; it does not read websites or browsing history.
 - **Memory saving.** Optional suggestions to deactivate inactive, memory-heavy tabs; memory values are estimates. Active, pinned and private tabs, media and calls are protected.
 - **Privacy and ad blocking.** Signed, unmodified uBlock Origin included. Telemetry, studies and sponsored suggestions are disabled through policies. This does not claim to remove all Mozilla network services: Safe Browsing, extension updates, search and optional account sync may still use the network.
 - **Updates.** Updates from this repository's stable GitHub Releases. Daily checking is opt-in; downloads and installation require user actions. Packages are verified against manifest size and SHA-256. The trust root is HTTPS plus this repository; there is no separate developer signing key yet.
