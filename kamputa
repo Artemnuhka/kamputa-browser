@@ -9,11 +9,23 @@ export KAMPUTA_PROFILE="$KAMPUTA_PROFILE_DIR"
 export MOZ_CRASHREPORTER_DISABLE=1
 export MOZ_APP_REMOTINGNAME=kamputa-browser
 export MOZ_APP_LAUNCHER="$KAMPUTA_ROOT/kamputa"
+# A second launch forwards URLs to the existing profile without touching its files.
+if python3 - "$KAMPUTA_PROFILE_DIR" <<'PYREMOTE'
+import fcntl,sys
+from pathlib import Path
+with (Path(sys.argv[1])/'.parentlock').open('a') as lock:
+    try:fcntl.lockf(lock,fcntl.LOCK_EX|fcntl.LOCK_NB)
+    except BlockingIOError:sys.exit(0)
+sys.exit(1)
+PYREMOTE
+then
+  exec "$KAMPUTA_ROOT/runtime/firefox" --profile "$KAMPUTA_PROFILE_DIR" "$@"
+fi
 while true; do
   python3 "$KAMPUTA_ROOT/update.py" apply
   python3 "$KAMPUTA_ROOT/configure-runtime.py"
   python3 "$KAMPUTA_ROOT/import-profile.py" "$KAMPUTA_PROFILE_DIR"
-  "$KAMPUTA_ROOT/runtime/firefox" -purgecaches -no-remote -profile "$KAMPUTA_PROFILE_DIR" -class kamputa-browser -name kamputa-browser "$@"
+  "$KAMPUTA_ROOT/runtime/firefox" -purgecaches -profile "$KAMPUTA_PROFILE_DIR" "$@"
   if [[ -e "$KAMPUTA_PROFILE_DIR/kamputa-restart-update" ]]; then
     rm -f -- "$KAMPUTA_PROFILE_DIR/kamputa-restart-update"
     continue

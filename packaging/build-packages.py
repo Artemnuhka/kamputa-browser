@@ -91,7 +91,7 @@ cp -a {RPMFS}/. %{{buildroot}}/
 /usr/share/doc/kamputa-browser
 ''')
 subprocess.run(['rpmbuild','-bb',str(spec),'--define',f'_topdir {RPMROOT}','--define','_build_id_links none','--define','__os_install_post %{nil}','--define','_binary_payload w6.gzdio','--define','use_source_date_epoch_as_buildtime 1','--define','_buildhost reproducible.invalid'],check=True)
-for f in (RPMROOT/'RPMS').rglob('*.rpm'):shutil.copy2(f,OUT/f.name)
+for f in (RPMROOT/'RPMS').rglob(f'kamputa-browser-{VERSION}-*.rpm'):shutil.copy2(f,OUT/f.name)
 APPDIR=layout(BUILD/'kamputa-browser.AppDir');shutil.copy2(ROOT/'packaging/AppRun',APPDIR/'AppRun');shutil.copy2(ROOT/'Kamputa.desktop',APPDIR/'kamputa-browser.desktop');shutil.copy2(ROOT/'assets/app-icon-256.png',APPDIR/'kamputa-browser.png');(APPDIR/'.DirIcon').symlink_to('kamputa-browser.png')
 env=os.environ.copy();env['ARCH']='x86_64';env['APPIMAGE_EXTRACT_AND_RUN']='1';env['APPIMAGELAUNCHER_DISABLE']='1';env['SOURCE_DATE_EPOCH']='1792972800'
 for key in ['APPIMAGE','APPDIR','OWD','ARGV0']:env.pop(key,None)

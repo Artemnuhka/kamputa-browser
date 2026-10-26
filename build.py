@@ -51,7 +51,7 @@ policies={'policies':{
 defaults={'intl.locale.requested':'ru','browser.tabs.inTitlebar':1,'browser.uidensity':1,'browser.tabs.hoverPreview.enabled':True,
 'browser.toolbars.bookmarks.visibility':'never','browser.startup.homepage':'about:kamputa',
 'browser.urlbar.suggest.bookmark':False,'browser.urlbar.scotchBonnet.enableOverride':False,
-'browser.startup.page':3,'browser.aboutwelcome.enabled':False,'browser.translations.automaticallyPopup':False,
+'browser.startup.page':3,'browser.link.open_newwindow.override.external':3,'browser.aboutwelcome.enabled':False,'browser.translations.automaticallyPopup':False,
 'kamputa.theme':'chromium','kamputa.memory.enabled':True,'kamputa.memory.auto':False,
 'kamputa.memory.thresholdMB':350,'kamputa.memory.idleMinutes':15}
 (dest/'defaults/pref/kamputa-defaults.js').write_text('\n'.join(f'pref({json.dumps(k)}, {json.dumps(v)});' for k,v in defaults.items())+'\n')

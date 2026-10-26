@@ -27,9 +27,11 @@ for locale in [p.name for p in out.iterdir() if p.is_dir()]:
  files[(locale,'branding/brand.ftl')]='\n'.join(f'{k} = {label}' for k in ['-brand-shorter-name','-brand-short-name','-brand-shortcut-name','-brand-full-name','-brand-product-name'])+'\n-vendor-short-name = Mozilla\n'
  files[(locale,'branding/brand.properties')]='\n'.join(k+'='+label for k in ['brandShortName','brandShorterName','brandFullName'])+'\n'
 for (locale,name),text in files.items():
- p=out/locale/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_text(text)
+ p=out/locale/name;p.parent.mkdir(parents=True,exist_ok=True)
+ if name.endswith('.ftl') and 'SPDX-License-Identifier:' not in text and 'mozilla.org/MPL/2.0' not in text:text='# SPDX-License-Identifier: MPL-2.0\n'+text
+ p.write_text(text)
 print('Localized product resource overrides:',len(files))
 index={}
 for p in out.rglob('*.ftl'):
  locale=p.relative_to(out).parts[0];index.setdefault(locale,[]).append('/'.join(p.relative_to(out).parts[1:]))
-(root/'src/locales-index.sys.mjs').write_text('export const LOCALES='+json.dumps(index,ensure_ascii=False)+';\n')
+(root/'src/locales-index.sys.mjs').write_text('/* SPDX-License-Identifier: MPL-2.0 */\nexport const LOCALES='+json.dumps(index,ensure_ascii=False)+';\n')
