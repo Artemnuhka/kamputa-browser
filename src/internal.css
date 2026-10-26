@@ -100,3 +100,8 @@ setting-group[groupid="updates"] { display:none !important; }
 .k-native-card { display:block !important; gap:0 !important; min-height:0 !important; }
 .k-native-card p { margin:8px 0 18px !important; }
 .k-native-card h2 { margin:0 0 10px !important; }
+
+/* Kamputa ships its own defaults through policies; omit the management banner. */
+@-moz-document url-prefix("about:preferences") {
+ #policies-container-content { display:none !important; }
+}
