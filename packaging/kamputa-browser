@@ -1,0 +1,3 @@
+#!/bin/sh
+# SPDX-License-Identifier: MPL-2.0
+exec python3 /opt/kamputa-browser/packaging/bootstrap.py /opt/kamputa-browser "$@"

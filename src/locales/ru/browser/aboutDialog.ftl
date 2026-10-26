@@ -1,0 +1,57 @@
+# SPDX-License-Identifier: MPL-2.0
+aboutDialog-title =
+    .title = О { -brand-full-name }
+releaseNotes-link = Что нового
+update-checkForUpdatesButton =
+    .label = Проверить наличие обновлений
+    .accesskey = о
+update-updateButton =
+    .label = Перезапустить { -brand-shorter-name } для обновления
+    .accesskey = е
+update-checkingForUpdates = Проверка наличия обновлений…
+settings-update-checking-for-updates =
+    .label = Проверка наличия обновлений…
+settings-update-downloading-2 =
+    .label = Скачивание обновления — { $transfer }
+aboutdialog-update-downloading = Скачивание обновления — <label data-l10n-name="download-status">{ $transfer }</label>
+update-applying = Применение обновления…
+settings-update-applying =
+    .label = Применение обновления…
+update-failed = Обновление не удалось. <label data-l10n-name="failed-link">Скачайте последнюю версию</label>
+update-failed-main = Обновление не удалось. <a data-l10n-name="failed-link-main">Скачайте последнюю версию</a>
+update-policy-disabled = Обновления отключены вашей организацией
+settings-update-policy-disabled =
+    .label = Обновления отключены вашей организацией
+update-noUpdatesFound = Установлена последняя версия { -brand-short-name }
+settings-update-no-updates-found =
+    .label = Установлена последняя версия { -brand-short-name }
+aboutdialog-update-checking-failed = Не удалось проверить наличие обновлений.
+settings-update-checking-failed =
+    .label = Не удалось проверить наличие обновлений.
+update-otherInstanceHandlingUpdates = { -brand-short-name } обновляется другим процессом
+settings-update-other-instance-handling-updates =
+    .label = { -brand-short-name } обновляется другим процессом
+aboutdialog-update-manual-with-link = Обновления доступны на <label data-l10n-name="manual-link">{ $displayUrl }</label>
+settings-update-manual-with-link = Обновления доступны на <a data-l10n-name="manual-link">{ $displayUrl }</a>
+update-unsupported = Вы не можете производить дальнейшие обновления на этой системе. <label data-l10n-name="unsupported-link">Подробнее</label>
+settings-update-unsupported = Вы не можете производить дальнейшие обновления на этой системе. <a data-l10n-name="unsupported-link">Подробнее</a>
+update-restarting = Перезапуск…
+settings-update-restarting =
+    .label = Перезапуск…
+update-internal-error2 = Не удалось проверить наличие обновлений из-за внутренней ошибки. Обновления доступны по адресу <label data-l10n-name="manual-link">{ $displayUrl }</label>
+settings-update-internal-error = Не удалось проверить наличие обновлений из-за внутренней ошибки. Обновления доступны по адресу <a data-l10n-name="manual-link">{ $displayUrl }</a>
+aboutdialog-channel-description = Сейчас вы находитесь на канале обновлений <label data-l10n-name="current-channel">{ $channel }</label>.
+warningDesc-version = { -brand-short-name } является пробным и может быть нестабилен.
+aboutdialog-help-user = Справка { -brand-product-name }
+aboutdialog-submit-feedback = Отправить отзыв
+community-exp = <label data-l10n-name="community-exp-mozillaLink">{ -vendor-short-name }</label> является <label data-l10n-name="community-exp-creditsLink">глобальным сообществом</label>, работающим над тем, чтобы Интернет оставался открытым  и общедоступным для всех и каждого.
+community-2 = { -brand-short-name } создан <label data-l10n-name="community-mozillaLink">{ -vendor-short-name }</label> — <label data-l10n-name="community-creditsLink">глобальным сообществом</label>, работающим над тем, чтобы Интернет оставался открытым и общедоступным для всех и каждого.
+helpus = Хотите помочь? <label data-l10n-name="helpus-donateLink">Сделайте пожертвование</label> или <label data-l10n-name="helpus-getInvolvedLink">присоединяйтесь!</label>
+helpus-referrals2 = Хотите помочь? <label data-l10n-name="helpus-donateLink">Сделайте пожертвование</label>, <label data-l10n-name="helpus-sharekamputa браузерLink">Поделитесь { -brand-product-name }</label>, или <label data-l10n-name="helpus-getInvolvedLink">присоединяйтесь!</label>
+bottomLinks-license = Сведения о лицензии
+bottom-links-terms = Условия использования
+bottom-links-privacy = Уведомление о конфиденциальности
+aboutDialog-version = { $version } ({ $bits }-разрядный)
+aboutDialog-version-nightly = { $version } ({ $isodate }) ({ $bits }-разрядный)
+aboutdialog-version-arch = { $version } ({ $arch })
+aboutdialog-version-arch-nightly = { $version } ({ $isodate }) ({ $arch })

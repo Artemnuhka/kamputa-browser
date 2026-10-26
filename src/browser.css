@@ -1,0 +1,236 @@
+/* SPDX-License-Identifier: MPL-2.0 */
+/* Browser styling is gated so Firefox's standard theme stays available. */
+:root[kamputa-theme="chromium"] { --toolbar-bgcolor: #fff !important; --toolbar-color:#29313c !important; --lwt-accent-color:#e3e7ee !important; --lwt-text-color:#29313c !important; --toolbar-field-background-color:#edf0f5 !important; --toolbar-field-color:#29313c !important; --tab-selected-bgcolor:#fff !important; --tab-border-radius:11px !important; --tab-min-height:34px !important; --toolbarbutton-border-radius:50% !important; --urlbar-icon-border-radius:50% !important; }
+:root[kamputa-theme="chromium"] #navigator-toolbox { background:#e3e7ee !important; border:0 !important; }
+:root[kamputa-theme="chromium"] #TabsToolbar { padding-top:5px !important; }
+:root[kamputa-theme="chromium"] .tab-background { box-shadow:none !important; margin-block:0 !important; border-radius:11px 11px 0 0 !important; }
+:root[kamputa-theme="chromium"] .tabbrowser-tab { padding-inline:2px !important; }
+:root[kamputa-theme="chromium"] .tabbrowser-tab:not([selected]) .tab-background:hover { background:#d3d9e4 !important; }
+:root[kamputa-theme="chromium"] #nav-bar { box-shadow:none !important; padding:4px 5px !important; }
+:root[kamputa-theme="chromium"] :is(#urlbar-background, .urlbar-background) { border:0 !important; border-radius:24px !important; box-shadow:none !important; background:#edf0f5 !important; }
+:root[kamputa-theme="chromium"] #urlbar[focused] :is(#urlbar-background, .urlbar-background) { outline:2px solid #8caee5 !important; background:white !important; }
+:root[kamputa-theme="chromium"] #PersonalToolbar { background:#fff !important; }
+:root[kamputa-theme="chromium"] #sidebar-button { display:none !important; }
+:root[kamputa-theme="chromium"] .tabbrowser-tab[pending] .tab-label { opacity:.6; }
+@media (prefers-color-scheme:dark) {
+ :root[kamputa-theme="chromium"] { --toolbar-bgcolor:#292b30 !important; --toolbar-color:#e1e3e9 !important; --lwt-text-color:#e1e3e9 !important; --tab-selected-bgcolor:#292b30 !important; --toolbar-field-color:#e1e3e9 !important; }
+ :root[kamputa-theme="chromium"] #navigator-toolbox { background:#1d1f23 !important; }
+ :root[kamputa-theme="chromium"] #PersonalToolbar { background:#292b30 !important; }
+ :root[kamputa-theme="chromium"] :is(#urlbar-background, .urlbar-background) { background:#202227 !important; }
+ :root[kamputa-theme="chromium"] #urlbar[focused] :is(#urlbar-background, .urlbar-background) { background:#292b30 !important; }
+}
+#kamputa-companion { appearance:none; border:0; background:transparent; cursor:pointer; width:100px; height:32px; min-width:100px; padding:0; align-self:end; -moz-window-dragging:no-drag; }
+#kamputa-companion img { width:96px; height:32px; object-fit:contain; object-position:center bottom; image-rendering:pixelated; pointer-events:none; }
+#k-overlay { position:fixed; inset:0; z-index:2147483645; display:flex; align-items:center; justify-content:center; background:#f0f3f9; color:#202735; font:15px system-ui,sans-serif; color-scheme:light; overflow:auto; }
+#k-overlay *, #k-hover *, #k-toast * { box-sizing:border-box; }
+#k-overlay .k-card { width:min(820px,94vw); padding:42px 50px 28px; border-radius:28px; background:#fff; box-shadow:0 16px 70px #26344b0d; margin:25px; }
+#k-overlay .k-brand { display:flex; gap:12px; align-items:center; font-size:15px; font-weight:650; letter-spacing:-.3px; }
+#k-overlay .k-brand img { width:30px; height:30px; border-radius:8px; }
+#k-overlay .k-kicker { margin-top:32px; color:#5e6d83; font-size:12px; letter-spacing:1.8px; text-transform:uppercase; }
+#k-overlay h1 { font-size:34px; letter-spacing:-1.3px; font-weight:550; margin:10px 0 12px; line-height:1.15; }
+#k-overlay p { color:#657086; line-height:1.55; margin:10px 0 24px; max-width:590px; }
+#k-overlay .k-options { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; margin:22px 0; }
+#k-overlay button { font:inherit; cursor:pointer; border:0; }
+#k-overlay .k-option { text-align:left; padding:16px 20px; background:#f6f8fc; border:2px solid transparent; border-radius:16px; color:#273347; }
+#k-overlay .k-option[aria-pressed="true"] { border-color:#6c91d0; background:#eef4ff; }
+#k-overlay .k-option strong { display:block; margin-bottom:5px; font-size:16px; font-weight:550; }
+#k-overlay small { font-size:12px; color:#69778e; line-height:1.5; }
+#k-overlay .k-footer { display:flex; align-items:center; gap:12px; margin-top:30px; border-top:1px solid #edf0f5; padding-top:22px; }
+#k-overlay .k-spacer { flex:1; }
+#k-overlay .k-primary { padding:12px 25px; border-radius:30px; background:#285bb5; color:white; }
+#k-overlay .k-secondary { padding:12px 18px; border-radius:30px; background:#edf2fa; color:#315d9f; }
+#k-overlay .k-link { color:#506989; background:transparent; padding:10px; }
+#k-overlay .k-dots { display:flex; gap:6px; }
+#k-overlay .k-dot { width:6px; height:6px; border-radius:10px; background:#dce3ed; }
+#k-overlay .k-dot.active { width:20px; background:#5c83c5; }
+#k-overlay .k-status { min-height:18px; color:#346347; font-size:13px; white-space:pre-line; }
+#k-overlay label { display:flex; align-items:center; gap:10px; margin-block:15px; color:#536077; }
+#k-overlay select, #k-overlay input[type=number] { font:inherit; border:1px solid #d4ddea; padding:8px 12px; border-radius:10px; background:#f8faff; color:#273347; width:170px; }
+#k-overlay input[type=checkbox] { accent-color:#285bb5; width:18px; height:18px; }
+#k-overlay .k-row { display:flex; gap:10px; flex-wrap:wrap; margin:15px 0; }
+#k-overlay button:focus-visible { outline:3px solid #89ace5; outline-offset:3px; }
+#k-hover { position:fixed; z-index:2147483646; pointer-events:none; width:290px; border:1px solid #d6dce7; border-radius:13px; padding:16px; background:#fff; color:#273347; box-shadow:0 8px 30px #1b294825; font:13px system-ui; }
+#k-hover .k-title { font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; margin-bottom:9px; }
+#k-hover .k-memory { padding-top:11px; margin-top:12px; border-top:1px solid #e8edf5; }
+#k-hover small { display:block; color:#788398; margin-top:5px; font-size:11px; }
+#k-toast { position:fixed; right:22px; bottom:22px; z-index:2147483644; max-width:390px; border:1px solid #d5dfea; padding:20px; background:#fff; color:#293347; box-shadow:0 12px 45px #17253c25; border-radius:18px; font:14px system-ui; }
+#k-toast p { line-height:1.5; margin:10px 0 16px; }
+#k-toast button { cursor:pointer; font:inherit; border:0; border-radius:25px; padding:9px 16px; background:#eaf1ff; color:#285bb5; margin-right:8px; }
+/* Geometry measured against the user's Helium Linux reference (1920×1040). */
+:root[kamputa-theme="chromium"] { font-family:"Adwaita Sans","DejaVu Sans",sans-serif !important; font-size:13px !important; --tab-min-height:28px !important; --tab-block-margin:0px !important; --toolbarbutton-inner-padding:5px !important; --toolbarbutton-outer-padding:1px !important; --urlbar-min-height:28px !important; }
+:root[kamputa-theme="chromium"] #TabsToolbar { padding:2px 0 !important; min-height:32px !important; max-height:32px !important; }
+:root[kamputa-theme="chromium"] #tabbrowser-tabs { min-height:28px !important; border:0 !important; margin:0 !important; padding:0 4px !important; }
+:root[kamputa-theme="chromium"] .tabbrowser-tab:not([pinned]) { max-width:198px !important; min-height:28px !important; }
+:root[kamputa-theme="chromium"] .tab-background { margin:0 !important; border-radius:7px !important; }
+:root[kamputa-theme="chromium"] .tab-content { padding-inline:8px !important; }
+:root[kamputa-theme="chromium"] .tab-label-container { height:28px !important; }
+:root[kamputa-theme="chromium"] .tab-close-button { width:18px !important; height:18px !important; padding:3px !important; }
+:root[kamputa-theme="chromium"] .titlebar-spacer[type="pre-tabs"], :root[kamputa-theme="chromium"] #alltabs-button { display:none !important; }
+:root[kamputa-theme="chromium"] #nav-bar { min-height:32px !important; max-height:34px !important; padding:1px 3px !important; }
+:root[kamputa-theme="chromium"] #nav-bar toolbarspring { display:none !important; }
+:root[kamputa-theme="chromium"] #urlbar-container { min-height:30px !important; padding:0 3px !important; margin:0 !important; }
+:root[kamputa-theme="chromium"] #urlbar { font-family:"Adwaita Sans","DejaVu Sans",sans-serif !important; font-size:13px !important; }
+:root[kamputa-theme="chromium"] :is(#urlbar-background, .urlbar-background) { border-radius:6px !important; }
+:root[kamputa-theme="chromium"] #urlbar:not([breakout-extend]) :is(#urlbar-background, .urlbar-background) { outline:none !important; }
+:root[kamputa-theme="chromium"] :is(#urlbar-input, .urlbar-input) { font-family:"Adwaita Sans","DejaVu Sans",sans-serif !important; }
+:root[kamputa-theme="chromium"] #nav-bar .toolbarbutton-1 { padding:0 2px !important; }
+:root[kamputa-theme="chromium"] #nav-bar .toolbarbutton-icon { width:26px !important; height:26px !important; }
+:root[kamputa-theme="chromium"] #PanelUI-menu-button { list-style-image:url('resource://kamputa/assets/menu.svg') !important; }
+:root[kamputa-theme="chromium"] #back-button { list-style-image:url('resource://kamputa/assets/back.svg') !important; }
+:root[kamputa-theme="chromium"] #forward-button { list-style-image:url('resource://kamputa/assets/forward.svg') !important; }
+:root[kamputa-theme="chromium"] #reload-button { list-style-image:url('resource://kamputa/assets/reload.svg') !important; }
+:root[kamputa-theme="chromium"] #kamputa-companion { height:28px; }
+:root[kamputa-theme="chromium"] #kamputa-companion img { height:28px; }
+:root[kamputa-theme="chromium"] .titlebar-button { padding:5px 9px !important; }
+@media (prefers-color-scheme:dark) {
+ :root[kamputa-theme="chromium"] { --toolbar-bgcolor:#26292f !important; --toolbar-color:#c8ccd2 !important; --lwt-text-color:#c8ccd2 !important; --tab-selected-bgcolor:#3a3d44 !important; --toolbar-field-color:#c8ccd2 !important; }
+ :root[kamputa-theme="chromium"] #navigator-toolbox { background:#26292f !important; }
+ :root[kamputa-theme="chromium"] :is(#urlbar-background, .urlbar-background) { background:#363940 !important; }
+ :root[kamputa-theme="chromium"] #urlbar[focused] :is(#urlbar-background, .urlbar-background) { background:#363940 !important; }
+ :root[kamputa-theme="chromium"] .tabbrowser-tab:not([selected]) .tab-background:hover { background:#30333a !important; }
+ :root[kamputa-theme="chromium"] #PersonalToolbar { background:#26292f !important; }
+}
+#k-overlay, #k-hover, #k-toast { font-family:"Adwaita Sans","DejaVu Sans",sans-serif !important; }
+
+:root[kamputa-theme="chromium"] #nav-bar .toolbarbutton-icon { box-sizing:border-box !important; width:28px !important; height:28px !important; padding:6px !important; }
+:root[kamputa-theme="chromium"] #urlbar .urlbar-input-container { min-height:28px !important; height:28px !important; padding-block:0 !important; }
+:root[kamputa-theme="chromium"] #urlbar { color:var(--toolbar-field-color) !important; }
+:root[kamputa-theme="chromium"] #urlbar .searchmode-switcher { --button-size-icon-small:16px; --button-min-height:24px; background:transparent !important; border-radius:4px !important; }
+:root[kamputa-theme="chromium"] #urlbar .searchmode-switcher-dropmarker { display:none !important; }
+/* Exact sampled palette from the supplied itsfoss PNG. Dark is the initial theme. */
+:root[kamputa-theme="chromium"] { color-scheme:dark; --toolbar-bgcolor:#282a31 !important; --toolbar-color:#bfc0c8 !important; --lwt-accent-color:#282a31 !important; --lwt-text-color:#bfc0c8 !important; --tab-selected-bgcolor:#393b42 !important; --toolbar-field-color:#c4c4cc !important; --toolbar-field-background-color:#393b42 !important; }
+:root[kamputa-theme="chromium"] #navigator-toolbox, :root[kamputa-theme="chromium"] #nav-bar, :root[kamputa-theme="chromium"] #PersonalToolbar { background:#282a31 !important; }
+:root[kamputa-theme="chromium"] #urlbar :is(#urlbar-background,.urlbar-background) { background:#393b42 !important; border-radius:6px !important; box-shadow:none !important; border:0 !important; }
+:root[kamputa-theme="chromium"] #urlbar[focused] :is(#urlbar-background,.urlbar-background) { background:#393b42 !important; outline:1px solid #8194bf !important; }
+:root[kamputa-theme="chromium"] .tab-background[selected] { background:#393b42 !important; }
+:root[kamputa-theme="chromium"] .tabbrowser-tab:not([selected]) .tab-background:hover { background:#32343c !important; }
+#k-overlay { color-scheme:dark; background:#202228; color:#e2e2ea; }
+#k-overlay .k-card { background:#292c33; box-shadow:0 16px 70px #0002; }
+#k-overlay .k-kicker, #k-overlay p, #k-overlay small { color:#a6abba; }
+#k-overlay .k-option { background:#32353e; color:#e2e2ea; }
+#k-overlay .k-option[aria-pressed="true"] { background:#343e56; border-color:#8da9e1; }
+#k-overlay .k-footer { border-color:#3a3d47; }
+#k-overlay .k-primary { background:#aec7fa; color:#142744; }
+#k-overlay .k-secondary { background:#373e50; color:#b9cff4; }
+#k-overlay .k-link { color:#b6c8e7; }
+#k-overlay .k-dot { background:#4b505f; }
+#k-overlay .k-dot.active { background:#a9c4f9; }
+#k-overlay .k-status { color:#a6d5b6; }
+#k-overlay label { color:#bdc4d3; }
+#k-overlay select, #k-overlay input[type=number] { border-color:#484e5d; background:#32353e; color:#e2e2ea; }
+#k-hover, #k-toast { background:#292c33; color:#e2e2ea; border-color:#444954; }
+#k-hover .k-memory { border-color:#444954; }
+#k-hover small { color:#a6abba; }
+#k-toast button { background:#373e50; color:#b9cff4; }
+:root[kamputa-theme="chromium"] #tabbrowser-tabs { padding-inline:0 !important; }
+:root[kamputa-theme="chromium"] .tabbrowser-tab:not([pinned]) { max-width:202px !important; padding-inline:3px !important; }
+:root[kamputa-theme="chromium"] .tab-content { padding-inline:6px !important; }
+:root[kamputa-theme="chromium"] .tabbrowser-tab:not([selected]) .tab-background { background:transparent !important; box-shadow:none !important; border:0 !important; }
+:root[kamputa-theme="chromium"] .tabbrowser-tab:not([selected]):hover .tab-background { background:#32343c !important; }
+:root[kamputa-theme="chromium"] .tabbrowser-tab::before, :root[kamputa-theme="chromium"] .tabbrowser-tab::after { display:none !important; }
+:root[kamputa-theme="chromium"] .tabbrowser-tab { opacity:1 !important; }
+:root[kamputa-theme="chromium"] #nav-bar { min-height:33px !important; max-height:33px !important; border-bottom:0 !important; }
+:root[kamputa-theme="chromium"] #nav-bar .toolbarbutton-icon { padding:7px !important; }
+:root[kamputa-theme="chromium"] .titlebar-min { list-style-image:url('resource://kamputa/assets/minimize.svg') !important; }
+:root[kamputa-theme="chromium"] .titlebar-max { list-style-image:url('resource://kamputa/assets/maximize.svg') !important; }
+:root[kamputa-theme="chromium"] .titlebar-close { list-style-image:url('resource://kamputa/assets/close.svg') !important; }
+:root[kamputa-theme="chromium"] .titlebar-min .toolbarbutton-icon { list-style-image:url('resource://kamputa/assets/minimize.svg') !important; }
+:root[kamputa-theme="chromium"] .titlebar-max .toolbarbutton-icon { list-style-image:url('resource://kamputa/assets/maximize.svg') !important; }
+:root[kamputa-theme="chromium"] .titlebar-close .toolbarbutton-icon { list-style-image:url('resource://kamputa/assets/close.svg') !important; }
+:root[kamputa-theme="chromium"] #urlbar { --urlbar-height:28px !important; min-height:28px !important; height:28px !important; }
+:root[kamputa-theme="chromium"] #urlbar .urlbar-input-container { height:28px !important; }
+:root[kamputa-theme="chromium"] #nav-bar #back-button .toolbarbutton-icon,
+:root[kamputa-theme="chromium"] #nav-bar #forward-button .toolbarbutton-icon,
+:root[kamputa-theme="chromium"] #nav-bar #reload-button .toolbarbutton-icon { padding:2px !important; }
+:root[kamputa-theme="chromium"] #urlbar .searchmode-switcher { --button-background-color:transparent; --button-background-color-hover:#454851; --button-background-color-active:#454851; --button-border-radius:4px; }
+:root[kamputa-theme="chromium"] #urlbar .searchmode-switcher::part(button) { background:transparent !important; border:0 !important; padding:3px !important; min-height:24px !important; }
+:root[kamputa-theme="chromium"] #nav-bar #back-button .toolbarbutton-icon,
+:root[kamputa-theme="chromium"] #nav-bar #forward-button .toolbarbutton-icon,
+:root[kamputa-theme="chromium"] #nav-bar #reload-button .toolbarbutton-icon { padding:4px !important; }
+:root[kamputa-theme="chromium"] .titlebar-button { background-repeat:no-repeat !important; background-position:center !important; background-size:10px 10px !important; }
+:root[kamputa-theme="chromium"] .titlebar-button .toolbarbutton-icon { opacity:0 !important; }
+:root[kamputa-theme="chromium"] .titlebar-min { background-image:url('resource://kamputa/assets/minimize.svg') !important; }
+:root[kamputa-theme="chromium"] .titlebar-max, :root[kamputa-theme="chromium"] .titlebar-restore { background-image:url('resource://kamputa/assets/maximize.svg') !important; }
+:root[kamputa-theme="chromium"] .titlebar-close { background-image:url('resource://kamputa/assets/close.svg') !important; }
+/* All navigation artwork uses one 16×16 canvas and a 1.35px stroke. */
+:root[kamputa-theme="chromium"] #nav-bar .toolbarbutton-1 > .toolbarbutton-icon { width:28px !important; height:28px !important; padding:6px !important; box-sizing:border-box !important; }
+:root[kamputa-theme="chromium"] #nav-bar .toolbarbutton-badge-stack { width:28px !important; height:28px !important; padding:6px !important; box-sizing:border-box !important; }
+:root[kamputa-theme="chromium"] #nav-bar .toolbarbutton-badge-stack .toolbarbutton-icon { width:16px !important; height:16px !important; padding:0 !important; margin:0 !important; box-sizing:border-box !important; }
+:root[kamputa-theme="chromium"] #nav-bar #back-button .toolbarbutton-icon,
+:root[kamputa-theme="chromium"] #nav-bar #forward-button .toolbarbutton-icon,
+:root[kamputa-theme="chromium"] #nav-bar #reload-button .toolbarbutton-icon { width:28px !important; height:28px !important; padding:6px !important; }
+:root[kamputa-theme="chromium"] #fxa-toolbar-menu-button { list-style-image:url('resource://kamputa/assets/profile.svg') !important; }
+:root[kamputa-theme="chromium"] #unified-extensions-button { list-style-image:url('resource://kamputa/assets/extensions.svg') !important; }
+/* Closing tabs must reach zero width; the previous fixed maximum blocked it. */
+:root[kamputa-theme="chromium"] .tabbrowser-tab[closing],
+:root[kamputa-theme="chromium"] .tabbrowser-tab:not([fadein]) { min-width:0 !important; max-width:0 !important; padding-inline:0 !important; margin-inline:0 !important; }
+:root[kamputa-theme="chromium"] .closing-tabs-spacer { width:0 !important; display:none !important; }
+/* Bookmarks remain on disk, but have no toolbar, star, or menu entry. */
+#PersonalToolbar, #bookmarks-menu-button, #star-button-box, #menu_bookmarks, #appMenu-bookmarks-button, #panelMenu_bookmarksMenu, #BMB_bookmarksShowAllTop { display:none !important; }
+/* Search provider is chosen in Settings; keep the omnibox itself quiet. */
+#urlbar .searchmode-switcher, #urlbar-searchmode-switcher, #urlbar .search-one-offs, .urlbarView .search-one-offs { display:none !important; }
+:root[kamputa-theme="chromium"] #urlbar { --toolbar-field-focus-border-color:transparent !important; --focus-outline-color:transparent !important; --urlbarView-highlight-background:#444751 !important; --urlbarView-highlight-color:#e2e2ea !important; outline:none !important; box-shadow:none !important; }
+:root[kamputa-theme="chromium"] #urlbar[focused] :is(#urlbar-background,.urlbar-background),
+:root[kamputa-theme="chromium"] #urlbar[open] :is(#urlbar-background,.urlbar-background) { outline:0 !important; border:0 !important; box-shadow:none !important; background:#393b42 !important; }
+:root[kamputa-theme="chromium"] #urlbar[open] { height:auto !important; min-height:28px !important; }
+:root[kamputa-theme="chromium"] #urlbar[open] .urlbar-background { border-radius:8px !important; box-shadow:0 6px 18px #0005 !important; }
+:root[kamputa-theme="chromium"] #urlbar .urlbar-input-container { border:0 !important; outline:0 !important; box-shadow:none !important; }
+:root[kamputa-theme="chromium"] .urlbarView { background:#393b42 !important; color:#e2e2ea !important; border:0 !important; margin-inline:0 !important; padding:4px 0 6px !important; border-radius:0 0 8px 8px !important; }
+:root[kamputa-theme="chromium"] .urlbarView-body-inner { border:0 !important; }
+:root[kamputa-theme="chromium"] .urlbarView-results { padding:0 5px !important; }
+:root[kamputa-theme="chromium"] .urlbarView-row { margin:0 !important; border-radius:5px !important; color:#d9dbe4 !important; padding-block:0 !important; }
+:root[kamputa-theme="chromium"] .urlbarView-row-inner { min-height:32px !important; padding:5px 9px !important; border-radius:5px !important; }
+:root[kamputa-theme="chromium"] .urlbarView-row[selected],
+:root[kamputa-theme="chromium"] .urlbarView-row[selected] .urlbarView-row-inner { background:#4a4d58 !important; color:#ececf2 !important; }
+:root[kamputa-theme="chromium"] .urlbarView-row:not([selected]):hover .urlbarView-row-inner { background:#41444d !important; }
+:root[kamputa-theme="chromium"] .urlbarView-url { color:#b1bed5 !important; }
+:root[kamputa-theme="chromium"] .urlbarView-action { color:#b5bac8 !important; }
+:root[kamputa-theme="chromium"] .urlbarView-row-label, :root[kamputa-theme="chromium"] .urlbarView-row[label]::before { display:none !important; }
+/* Firefox 158 paints suggestions in a separate popover, with its own background. */
+:root[kamputa-theme="chromium"] #urlbar {
+ --urlbar-background-border-radius:6px !important; --urlbar-border-radius:6px !important;
+ --urlbar-background-color:#393b42 !important; --urlbar-background-color-focus:#393b42 !important;
+ --urlbar-background-outline-focused:none !important; --urlbar-input-container-outline-open:none !important;
+ --urlbar-input-container-outline-open-focused:none !important;
+ --urlbar-background-overhang-open:0px !important; --urlbar-input-growth-open-block:0px !important; --urlbar-input-growth-open-inline:0px !important;
+ --urlbarView-margin-inline:0px !important; --urlbarView-margin-block:0px !important;
+ --urlbar-background-border-open:0px solid transparent !important;
+ --urlbarview-background-color-selected:#4a4d58 !important; --urlbarview-text-color-selected:#e2e2ea !important;
+}
+:root[kamputa-theme="chromium"] #urlbar > .urlbar-background { outline:0 !important; }
+:root[kamputa-theme="chromium"] .urlbarView-background { background:#393b42 !important; border:0 !important; border-radius:0 0 6px 6px !important; box-shadow:0 6px 18px #0004 !important; inset-inline:0 !important; }
+:root[kamputa-theme="chromium"] .urlbarView-row-inner { height:32px !important; min-height:32px !important; box-sizing:border-box !important; font-size:13px !important; line-height:20px !important; padding:5px 9px !important; }
+:root[kamputa-theme="chromium"] .urlbarView-row { min-height:32px !important; }
+#toggle_PersonalToolbar, [data-toolbar-id="PersonalToolbar"], #context-bookmarkpage, #context-bookmarklink { display:none !important; }
+/* The companion is a small anchored utility menu, never the settings overlay. */
+#kamputa-companion-menu { --panel-padding:6px; --panel-background:var(--arrowpanel-background,#2c2f36); --panel-color:var(--arrowpanel-color,#e2e2ea); }
+.kamputa-companion-actions { display:flex; flex-direction:column; min-width:174px; padding:2px; gap:2px; }
+.kamputa-companion-actions button { appearance:none; font:13px "Adwaita Sans","DejaVu Sans",sans-serif; text-align:start; border:0; border-radius:6px; padding:9px 12px; color:inherit; background:transparent; cursor:pointer; }
+.kamputa-companion-actions button:hover,.kamputa-companion-actions button:focus-visible { background:color-mix(in srgb,currentColor 12%,transparent); outline:0; }
+:root[kamputa-theme="chromium"] panel, :root[kamputa-theme="chromium"] menupopup {
+ --arrowpanel-background:#2c2f36 !important; --arrowpanel-color:#e2e2ea !important; --arrowpanel-border-color:#41454f !important;
+ --panel-background:#2c2f36 !important; --panel-color:#e2e2ea !important; --panel-border-color:#41454f !important;
+ --panel-border-radius:10px !important; --arrowpanel-border-radius:10px !important;
+ --panel-item-hover-bgcolor:#434750 !important; --panel-item-active-bgcolor:#4b5160 !important;
+ --panel-item-hover-active-bgcolor:#4b5160 !important; --panel-item-text-color:#e2e2ea !important;
+ font-family:"Adwaita Sans","DejaVu Sans",sans-serif !important; font-size:13px !important;
+}
+:root[kamputa-theme="chromium"] .subviewbutton { border-radius:6px !important; }
+:root[kamputa-theme="chromium"] #appMenu-popup .panel-subview-body { padding:6px !important; }
+:root[kamputa-theme="chromium"] #downloadsPanel { --arrowpanel-background:#2c2f36 !important; }
+
+/* Shared Material roles for Kamputa's own setup, settings and memory UI. */
+#k-overlay { background:var(--k-page,#202228); color:var(--k-text,#e2e2ea); }
+#k-overlay .k-card, #k-toast, #k-hover { background:var(--k-surface,#292c33); color:var(--k-text,#e2e2ea); border-color:var(--k-border,#41454f); }
+#k-overlay p, #k-overlay small, #k-overlay label, #k-overlay .k-kicker, #k-overlay .k-status { color:var(--k-muted,#abb2c2); }
+#k-overlay .k-option { background:var(--k-field,#393b42); color:var(--k-text,#e2e2ea); }
+#k-overlay .k-option[aria-pressed="true"] { background:var(--k-accentContainer,#3a4357); border-color:var(--k-accent,#aec7fa); }
+#k-overlay .k-primary { background:var(--k-accent,#aec7fa); color:var(--k-onAccent,#152741); }
+#k-overlay .k-secondary, #k-toast button { background:var(--k-field,#393b42); color:var(--k-text,#e2e2ea); }
+#k-overlay .k-link { color:var(--k-link,#b7cdf5); }
+#k-overlay .k-footer { border-color:var(--k-border,#41454f); }
+#k-overlay .k-dot { background:var(--k-border,#41454f); }
+#k-overlay .k-dot.active { background:var(--k-accent,#aec7fa); }
+#k-overlay select, #k-overlay input[type=number] { background:var(--k-field,#393b42); color:var(--k-text,#e2e2ea); border-color:var(--k-border,#41454f); }
+#k-overlay input[type=checkbox] { accent-color:var(--k-accent,#aec7fa); }
+#k-overlay button:focus-visible { outline-color:var(--k-accent,#aec7fa); }

@@ -1,0 +1,15 @@
+{
+  "kamputa_version": "0.5.1",
+  "firefox_version": "158.0.1",
+  "firefox_revision": "48a735cc74a7e6d730f9bf59c3de58f750287a23",
+  "firefox_source_url": "https://archive.mozilla.org/pub/firefox/releases/158.0.1/source/firefox-158.0.1.source.tar.xz",
+  "firefox_source_sha512": "a5cc16a63f4b43f01bc26e2feb12e54e5281aebdc81775cbc0e8d77dd5ceefa5055e78d2a6ad54895c397d414d1fac13d49ddf28099f534269a6a166dedafa5e",
+  "firefox_binary_url": "https://archive.mozilla.org/pub/firefox/releases/158.0.1/linux-x86_64/en-US/firefox-158.0.1.tar.xz",
+  "firefox_binary_sha512": "f15f8b281c4ead2ef35d0b56c59a0ead825521d7243d16f3e7c36f0c2732101ae1f564e044a7aad1e04c310f70064611d13434fb24d052a662356ce068d7d3ec",
+  "ru_langpack_sha512": "8c7e4e410733d30210594e680124cfbc2179b8ea4f1b9a709db8037395fa4cd7019c0b025241fca174b173cf07d4acd462a9d47ed6630c69961718cc483b9b33",
+  "ublock_version": "1.75.0",
+  "ublock_sha256": "5b74415860456370644bd80f16125e865b0e6c356bb5dfcfb84069967eaa5287",
+  "ublock_source_url": "https://github.com/gorhill/uBlock/archive/refs/tags/1.75.0.tar.gz",
+  "ublock_source_sha256": "a518c7d6e6b3f81d1a738befeb617abba59f93bd6b1e626da079a1003e9db52b",
+  "material_color_utilities": "0.4.0"
+}

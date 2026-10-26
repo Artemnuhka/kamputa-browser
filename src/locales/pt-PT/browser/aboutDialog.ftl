@@ -1,0 +1,57 @@
+# SPDX-License-Identifier: MPL-2.0
+aboutDialog-title =
+    .title = Acerca do { -brand-full-name }
+releaseNotes-link = Novidades
+update-checkForUpdatesButton =
+    .label = Procurar atualizações
+    .accesskey = c
+update-updateButton =
+    .label = Reiniciar para atualizar o { -brand-shorter-name }
+    .accesskey = R
+update-checkingForUpdates = A procurar atualizações…
+settings-update-checking-for-updates =
+    .label = A procurar atualizações…
+settings-update-downloading-2 =
+    .label = A transferir atualização — { $transfer }
+aboutdialog-update-downloading = A transferir a atualização — <label data-l10n-name="download-status">{ $transfer }</label>
+update-applying = A aplicar atualização…
+settings-update-applying =
+    .label = A aplicar atualização…
+update-failed = A atualização falhou. <label data-l10n-name="failed-link">Transferir a versão mais recente</label>
+update-failed-main = A atualização falhou. <a data-l10n-name="failed-link-main">Transferir a versão mais recente</a>
+update-policy-disabled = Atualizações desativadas pela sua organização
+settings-update-policy-disabled =
+    .label = Atualizações desativadas pela sua organização
+update-noUpdatesFound = O { -brand-short-name } está atualizado
+settings-update-no-updates-found =
+    .label = O { -brand-short-name } está atualizado
+aboutdialog-update-checking-failed = Incapaz de verificar a existência de atualizações.
+settings-update-checking-failed =
+    .label = Incapaz de verificar a existência de atualizações.
+update-otherInstanceHandlingUpdates = O { -brand-short-name } já está a ser atualizado por outra instância
+settings-update-other-instance-handling-updates =
+    .label = O { -brand-short-name } já está a ser atualizado por outra instância
+aboutdialog-update-manual-with-link = Atualizações disponíveis em <label data-l10n-name="manual-link">{ $displayUrl }</label>
+settings-update-manual-with-link = Atualizações disponíveis em <a data-l10n-name="manual-link">{ $displayUrl }</a>
+update-unsupported = Não pode realizar mais atualizações neste sistema. <label data-l10n-name="unsupported-link">Saber mais</label>
+settings-update-unsupported = Não pode realizar mais atualizações neste sistema. <a data-l10n-name="unsupported-link">Saber mais</a>
+update-restarting = A reiniciar…
+settings-update-restarting =
+    .label = A reiniciar…
+update-internal-error2 = Não foi possível procurar por atualizações devido a um erro interno. As atualizações estão disponíveis em <label data-l10n-name="manual-link">{ $displayUrl }</label>
+settings-update-internal-error = Não foi possível procurar por atualizações devido a um erro interno. As atualizações estão disponíveis em <a data-l10n-name="manual-link">{ $displayUrl }</a>
+aboutdialog-channel-description = Atualmente, está no canal de atualização <label data-l10n-name="current-channel">{ $channel }</label>.
+warningDesc-version = O { -brand-short-name } é experimental e poderá ser instável.
+aboutdialog-help-user = Ajuda do { -brand-product-name }
+aboutdialog-submit-feedback = Enviar comentários
+community-exp = <label data-l10n-name="community-exp-mozillaLink">A { -vendor-short-name }</label> é uma <label data-l10n-name="community-exp-creditsLink">comunidade global</label> que trabalha em conjunto para manter a Web aberta, pública e acessível a todos.
+community-2 = O { -brand-short-name } é desenhado pela <label data-l10n-name="community-mozillaLink">{ -vendor-short-name }</label>, uma <label data-l10n-name="community-creditsLink">comunidade global</label> que trabalha em conjunto para manter a Web aberta, pública e acessível a todos.
+helpus = Pretende ajudar? <label data-l10n-name="helpus-donateLink">Faça uma doação</label> ou <label data-l10n-name="helpus-getInvolvedLink">participe!</label>
+helpus-referrals2 = Quer ajudar? <label data-l10n-name="helpus-donateLink">Faça uma doação </label>, <label data-l10n-name="helpus-sharekamputa browserLink">partilhe o { -brand-product-name }</label>, ou <label data-l10n-name="helpus-getInvolvedLink">envolva-se!</label>
+bottomLinks-license = Informação de licenciamento
+bottom-links-terms = Termos de utilização
+bottom-links-privacy = Informação de Privacidade
+aboutDialog-version = { $version } ({ $bits }-bit)
+aboutDialog-version-nightly = { $version } ({ $isodate }) ({ $bits }-bit)
+aboutdialog-version-arch = { $version } ({ $arch })
+aboutdialog-version-arch-nightly = { $version } ({ $isodate }) ({ $arch })

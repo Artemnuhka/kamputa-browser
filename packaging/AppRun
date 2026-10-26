@@ -1,0 +1,4 @@
+#!/bin/sh
+# SPDX-License-Identifier: MPL-2.0
+KAMPUTA_APPDIR="${APPDIR:-$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)}"
+exec python3 "$KAMPUTA_APPDIR/opt/kamputa-browser/packaging/bootstrap.py" "$KAMPUTA_APPDIR/opt/kamputa-browser" "$@"

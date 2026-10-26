@@ -1,0 +1,5 @@
+/* SPDX-License-Identifier: MPL-2.0 */
+/* Horizontal tab width limits must not leak into expanded vertical tabs. */
+:root[kamputa-theme="chromium"] #tabbrowser-tabs[orient="vertical"][expanded] .tabbrowser-tab[fadein]:not([pinned]):not([closing]) { width:100% !important; max-width:none !important; box-sizing:border-box !important; padding-inline:9px !important; }
+:root[kamputa-theme="chromium"] #tabbrowser-tabs[orient="vertical"][expanded] .tab-background { border-radius:7px !important; }
+:root[kamputa-theme="chromium"] #tabbrowser-tabs[orient="vertical"][expanded] #tabs-newtab-button { margin-inline:9px !important; border-radius:7px !important; }

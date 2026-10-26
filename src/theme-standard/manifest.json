@@ -1,0 +1,52 @@
+{
+  "manifest_version": 2,
+  "name": "kamputa browser \u2014 Classic Material",
+  "version": "0.3",
+  "description": "Compact dark Kamputa theme with matching browser surfaces.",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "material-standard@kamputa.local"
+    }
+  },
+  "theme": {
+    "colors": {
+      "frame": "#282a31",
+      "frame_inactive": "#282a31",
+      "tab_background_text": "#bfc0c8",
+      "tab_selected": "#393b42",
+      "tab_text": "#e2e2ea",
+      "tab_line": "#393b42",
+      "toolbar": "#282a31",
+      "toolbar_text": "#c4c4cc",
+      "toolbar_bottom_separator": "#282a31",
+      "toolbar_top_separator": "#282a31",
+      "toolbar_vertical_separator": "#393b42",
+      "toolbar_field": "#393b42",
+      "toolbar_field_text": "#e2e2ea",
+      "toolbar_field_border": "#393b42",
+      "toolbar_field_focus": "#393b42",
+      "toolbar_field_text_focus": "#e2e2ea",
+      "toolbar_field_border_focus": "#393b42",
+      "toolbar_field_highlight": "#626b80",
+      "toolbar_field_highlight_text": "#ffffff",
+      "popup": "#2c2f36",
+      "popup_text": "#e2e2ea",
+      "popup_border": "#41454f",
+      "popup_highlight": "#434750",
+      "popup_highlight_text": "#ffffff",
+      "sidebar": "#25282f",
+      "sidebar_text": "#dfe1e9",
+      "sidebar_border": "#353943",
+      "icons": "#bfc0c8",
+      "icons_attention": "#aec7fa",
+      "button_background_hover": "#3c4049",
+      "button_background_active": "#474c58",
+      "ntp_background": "#202228",
+      "ntp_text": "#e2e2ea"
+    },
+    "properties": {
+      "color_scheme": "dark",
+      "content_color_scheme": "dark"
+    }
+  }
+}

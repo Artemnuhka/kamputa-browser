@@ -1,0 +1,11 @@
+/runtime*/
+/profile/
+/profiles/
+/backups/
+/updates/
+/dist/
+/build/
+/*.AppDir/
+__pycache__/
+*.pyc
+*.log

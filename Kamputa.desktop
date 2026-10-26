@@ -1,0 +1,14 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=kamputa browser
+Name[ru]=kamputa браузер
+Comment=Browse with a calm interface and a pixel companion
+Comment[ru]=Браузер со спокойным интерфейсом и пиксельным питомцем
+Exec=kamputa-browser %u
+Icon=kamputa-browser
+Terminal=false
+Categories=Network;WebBrowser;
+MimeType=text/html;x-scheme-handler/http;x-scheme-handler/https;
+StartupWMClass=kamputa-browser
+StartupNotify=true

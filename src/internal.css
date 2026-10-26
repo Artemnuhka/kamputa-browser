@@ -1,0 +1,102 @@
+/* SPDX-License-Identifier: MPL-2.0 */
+:root[kamputa-surface="dark"] {
+ color-scheme:dark !important; font-family:"Adwaita Sans","DejaVu Sans",sans-serif !important;
+ --in-content-page-background:var(--k-page,#202228) !important; --in-content-page-color:var(--k-text,#e2e2ea) !important;
+ --in-content-box-background:var(--k-surface,#2b2e36) !important; --in-content-box-background-odd:var(--k-field,#30343c) !important;
+ --in-content-box-border-color:var(--k-border,#40444f) !important; --in-content-border-color:var(--k-border,#40444f) !important;
+ --in-content-primary-button-background:var(--k-accent,#aec7fa) !important; --in-content-primary-button-text-color:var(--k-onAccent,#152741) !important;
+ --in-content-primary-button-background-hover:#c0d3fa !important;
+ --in-content-button-background:var(--k-field,#363b46) !important; --in-content-button-background-hover:var(--k-hover,#454b59) !important;
+ --in-content-button-text-color:var(--k-text,#e2e2ea) !important; --in-content-accent-color:var(--k-accent,#aec7fa) !important;
+ --in-content-accent-color-active:#c0d3fa !important; --in-content-link-color:var(--k-link,#b7cdf5) !important;
+ --in-content-link-color-hover:#d1dffc !important; --in-content-item-selected:#414b61 !important;
+ --background-color-canvas:var(--k-page,#202228) !important; --background-color-box:var(--k-surface,#2b2e36) !important;
+ --background-color-card:var(--k-surface,#2b2e36) !important; --background-color-menu:#2c2f36 !important;
+ --background-color-box-info:#303844 !important; --background-color-page:var(--k-page,#202228) !important;
+ --background-color-box-ui:var(--k-surface,#2b2e36) !important; --background-color-highlight:#414b61 !important;
+ --background-color-list-item-hover:#363c49 !important;
+ --text-color:var(--k-text,#e2e2ea) !important; --text-color-deemphasized:var(--k-muted,#abb2c2) !important;
+ --border-color:var(--k-border,#40444f) !important; --border-color-deemphasized:#393e49 !important;
+ --color-accent-primary:var(--k-accent,#aec7fa) !important; --color-accent-primary-hover:#c0d3fa !important;
+ --link-color:var(--k-link,#b7cdf5) !important; --link-color-hover:#d1dffc !important;
+ --button-background-color:var(--k-field,#363b46) !important; --button-background-color-hover:var(--k-hover,#454b59) !important;
+ --button-text-color:var(--k-text,#e2e2ea) !important; --button-border-radius:8px !important;
+ --button-background-color-primary:var(--k-accent,#aec7fa) !important; --button-text-color-primary:var(--k-onAccent,#152741) !important;
+ --input-background-color:var(--k-field,#30343d) !important; --input-border-color:#4a505d !important;
+ --input-color:var(--k-text,#e2e2ea) !important; --input-border-radius:7px !important;
+ --card-background-color:var(--k-surface,#2b2e36) !important; --card-border-color:var(--k-border,#40444f) !important;
+ --card-border-radius:12px !important; --focus-outline-color:#9baecd !important;
+ background:var(--k-page,#202228) !important; color:var(--k-text,#e2e2ea) !important;
+}
+:root[kamputa-surface="dark"] body { background:var(--k-page,#202228) !important; color:var(--k-text,#e2e2ea) !important; }
+:root[kamputa-surface="dark"] #categories { background:var(--k-frame,#25282f) !important; padding:18px 12px !important; border-radius:0 !important; }
+:root[kamputa-surface="dark"] #categories .category { border-radius:8px !important; margin:3px 0 !important; padding-block:9px !important; }
+:root[kamputa-surface="dark"] #categories .category[selected], :root[kamputa-surface="dark"] #categories .category.selected { background:var(--k-accentContainer,#3a4357) !important; color:var(--k-onAccentContainer,#cbdcfa) !important; }
+:root[kamputa-surface="dark"] #mainPrefPane { max-width:880px !important; }
+:root[kamputa-surface="dark"] groupbox { background:var(--k-surface,#2b2e36) !important; border:1px solid #393e49 !important; border-radius:12px !important; padding:20px !important; margin-block:14px !important; }
+:root[kamputa-surface="dark"] .main-content { background:var(--k-page,#202228) !important; padding:30px 36px !important; }
+:root[kamputa-surface="dark"] .card, :root[kamputa-surface="dark"] addon-card { border-radius:12px !important; }
+:root[kamputa-surface="dark"] input:not([type="checkbox"]):not([type="radio"]), :root[kamputa-surface="dark"] select { border-radius:7px !important; }
+:root[kamputa-surface="dark"] button { border-radius:8px !important; }
+/* The palette controls are present for both base themes. */
+.k-palette-card { font:14px "Adwaita Sans","DejaVu Sans",sans-serif; color:var(--k-text,#e2e2ea); background:var(--k-surface,#2b2e36); border:1px solid var(--k-border,#41454f); border-radius:12px; padding:22px; margin:16px 0 22px; color-scheme:dark; }
+.k-palette-card h2 { font-size:20px; margin:0 0 8px; }
+.k-palette-card p { color:var(--k-muted,#abb2c2); line-height:1.5; margin:0 0 18px; }
+.k-theme-bases { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+.k-palette-card button { cursor:pointer; font:inherit; }
+.k-theme-base { text-align:left; border:2px solid transparent; border-radius:10px; padding:14px; background:var(--k-field,#393b42); color:var(--k-text,#e2e2ea); }
+.k-theme-base strong,.k-theme-base small { display:block; }
+.k-theme-base small { color:var(--k-muted,#abb2c2); margin-top:5px; font-size:12px; }
+.k-theme-base[aria-pressed="true"] { border-color:var(--k-accent,#aec7fa); }
+.k-palette-swatches { display:flex; gap:12px; margin:20px 0; }
+.k-palette-swatch { box-sizing:border-box; width:34px; height:34px; border-radius:50% !important; border:3px solid transparent; background:var(--swatch) !important; box-shadow:inset 0 0 0 2px #0002; }
+.k-palette-swatch[aria-pressed="true"] { outline:2px solid var(--k-accent,#aec7fa); outline-offset:3px; }
+.k-palette-custom { display:flex; align-items:center; gap:12px; }
+.k-palette-custom input[type="color"] { width:42px; height:32px; padding:2px; background:transparent; border:1px solid var(--k-border,#41454f); border-radius:7px; cursor:pointer; }
+.k-palette-custom input[type="text"] { width:100px; font:inherit; color:var(--k-text,#e2e2ea); background:var(--k-field,#393b42); border:1px solid var(--k-border,#41454f); border-radius:7px; padding:8px 10px; }
+.k-palette-status { min-height:18px; font-size:12px; color:var(--k-muted,#abb2c2); margin-top:10px; }
+:root[kamputa-surface="dark"] #categories moz-page-nav-button::part(button) { border-radius:8px !important; background:transparent !important; }
+:root[kamputa-surface="dark"] #categories moz-page-nav-button[selected]::part(button) { background:var(--k-accentContainer,#3a4357) !important; }
+:root[kamputa-surface="dark"] #newtab-search { background:var(--k-field,#393b42) !important; border-color:var(--k-border,#41454f) !important; }
+
+:root[kamputa-surface="dark"] moz-page-nav-button {
+ --page-nav-button-background-color: transparent !important;
+ --page-nav-button-background-color-selected:var(--k-accentContainer) !important;
+ --page-nav-button-background-color-hover:var(--k-hover) !important;
+ --page-nav-button-text-color:var(--k-text) !important;
+ --page-nav-button-text-color-selected:var(--k-onAccentContainer) !important;
+ --page-nav-button-border-radius:8px !important;
+}
+img[src="chrome://browser/skin/preferences/fox-ai.svg"] { content:url("resource://kamputa/assets/app-icon-128.png") !important; object-fit:contain; padding:14px; box-sizing:border-box; }
+
+#kamputa-palette-controls .k-palette-swatch { appearance:none !important; flex:0 0 34px !important; width:34px !important; min-width:34px !important; max-width:34px !important; height:34px !important; min-height:34px !important; padding:0 !important; margin:0 !important; border-radius:50% !important; border:3px solid transparent !important; }
+#kamputa-palette-controls .k-theme-base { margin:0 !important; border:2px solid transparent !important; }
+#kamputa-palette-controls .k-theme-base[aria-pressed="true"] { border-color:var(--k-accent) !important; }
+#kamputa-palette-controls p { margin:8px 0 18px !important; }
+#kamputa-palette-controls .k-palette-custom input { margin:0 !important; }
+
+/* Labs is an upstream experimental product, absent from this browser's settings. */
+#category-experimental, #paneExperimental, #experimentalCategory { display:none !important; }
+
+/* Native preferences extensions: appearance, tabs and a separate Updates pane. */
+.k-native-card { font:14px 'Adwaita Sans','DejaVu Sans',sans-serif; background:var(--k-surface,#2c2f36); color:var(--k-text,#e2e2ea); border:1px solid var(--k-border,#41454f); border-radius:12px; padding:22px; margin:20px 0; color-scheme:dark; }
+.k-native-card h2 { font-size:19px; margin:0 0 10px; font-weight:600; }
+.k-native-card p { margin:8px 0 18px; line-height:1.55; color:var(--k-muted,#abb2c2); }
+.k-native-option { display:flex; align-items:center; flex-wrap:wrap; gap:12px; margin:17px 0; }
+.k-native-option input[type=checkbox] { accent-color:var(--k-accent,#aec7fa); width:18px; height:18px; margin:0; }
+.k-native-option input[type=text], .k-native-option input[type=number] { background:var(--k-field,#393b42); color:inherit; border:1px solid var(--k-border,#41454f); border-radius:7px; padding:9px 12px; font:inherit; }
+.k-native-option input[type=text] { flex:1; min-width:200px; }
+.k-native-option input[type=number] { width:130px; margin-inline-start:auto; }
+.k-native-card small { display:block; color:var(--k-muted,#abb2c2); line-height:1.5; font-size:12px; }
+.k-native-actions { display:flex; flex-wrap:wrap; gap:8px; margin:14px 0; }
+.k-native-card button { appearance:none; color:var(--k-text,#e2e2ea); background:var(--k-field,#393b42); border:0; padding:10px 15px; margin:0; font:inherit; cursor:pointer; border-radius:7px; }
+.k-native-card button:hover { background:var(--k-hover,#434750); }
+.k-native-card button:disabled { opacity:.45; cursor:default; }
+.k-native-card [hidden] { display:none !important; }
+.k-native-status { color:var(--k-muted,#abb2c2); font-size:13px; line-height:1.5; min-height:21px; }
+.k-native-card :focus-visible { outline:2px solid var(--k-accent,#aec7fa); outline-offset:3px; }
+setting-group[groupid="updates"] { display:none !important; }
+
+.k-native-card { display:block !important; gap:0 !important; min-height:0 !important; }
+.k-native-card p { margin:8px 0 18px !important; }
+.k-native-card h2 { margin:0 0 10px !important; }

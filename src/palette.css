@@ -1,0 +1,15 @@
+/* SPDX-License-Identifier: MPL-2.0 */
+/* Color tokens come from the real native theme's Material 3 tonal palette. */
+:root#main-window[kamputa-theme="chromium"][kamputa-palette] { --toolbar-bgcolor:var(--k-frame) !important; --toolbar-color:var(--k-text) !important; --lwt-accent-color:var(--k-frame) !important; --lwt-text-color:var(--k-text) !important; --tab-selected-bgcolor:var(--k-selected) !important; --toolbar-field-color:var(--k-text) !important; }
+:root#main-window[kamputa-theme="chromium"][kamputa-palette] #navigator-toolbox,
+:root#main-window[kamputa-theme="chromium"][kamputa-palette] #nav-bar { background:var(--k-frame) !important; }
+:root#main-window[kamputa-theme="chromium"][kamputa-palette] .tab-background[selected] { background:var(--k-selected) !important; }
+:root#main-window[kamputa-theme="chromium"][kamputa-palette] #urlbar { --urlbar-background-color:var(--k-field) !important; --urlbar-background-color-focus:var(--k-field) !important; color:var(--k-text) !important; }
+:root#main-window[kamputa-theme="chromium"][kamputa-palette] #urlbar > .urlbar-background,
+:root#main-window[kamputa-theme="chromium"][kamputa-palette] #urlbar > .urlbar-input-container,
+:root#main-window[kamputa-theme="chromium"][kamputa-palette] #urlbar .urlbarView:popover-open,
+:root#main-window[kamputa-theme="chromium"][kamputa-palette] #urlbar .urlbarView-background { background:var(--k-field) !important; color:var(--k-text) !important; }
+:root#main-window[kamputa-theme="chromium"][kamputa-palette] #urlbar .urlbarView-row-inner { color:var(--k-text) !important; }
+:root#main-window[kamputa-theme="chromium"][kamputa-palette] #urlbar .urlbarView-row[selected] .urlbarView-row-inner { background:var(--k-hover) !important; }
+:root#main-window[kamputa-theme="chromium"][kamputa-palette] panel,
+:root#main-window[kamputa-theme="chromium"][kamputa-palette] menupopup { --panel-background:var(--k-surface) !important; --arrowpanel-background:var(--k-surface) !important; --panel-color:var(--k-text) !important; --arrowpanel-color:var(--k-text) !important; --panel-border-color:var(--k-border) !important; --arrowpanel-border-color:var(--k-border) !important; --panel-item-hover-bgcolor:var(--k-hover) !important; }

@@ -1,0 +1,35 @@
+/* SPDX-License-Identifier: MPL-2.0 */
+#kamputa-companion { position:relative; overflow:hidden; width:120px; min-width:120px; }
+#kamputa-companion .k-pet-sprite { display:block; position:absolute; width:56px; height:32px; left:32px; bottom:0; overflow:hidden; pointer-events:none; }
+.k-pet-frame { display:block; position:absolute; background-image:url('resource://kamputa/assets/hooded-cat-pixel.png'); background-repeat:no-repeat; image-rendering:pixelated; pointer-events:none; }
+#kamputa-companion [hidden] { display:none !important; }
+#kamputa-companion[data-pet-mode='walk'] .k-pet-sprite { animation:k-pet-stroll 9s linear infinite; }
+@keyframes k-pet-stroll { 0% { transform:translateX(-27px); } 49% { transform:translateX(27px); } 50% { transform:translateX(27px) scaleX(-1); } 99% { transform:translateX(-27px) scaleX(-1); } 100% { transform:translateX(-27px); } }
+#kamputa-companion-menu { --panel-padding:0; --panel-border-radius:12px; }
+.k-pet-card { width:300px; padding:18px; box-sizing:border-box; font:13px 'Adwaita Sans','DejaVu Sans',sans-serif; color:var(--k-text,#e2e2ea); background:var(--k-surface,#2c2f36); border-radius:12px; }
+.k-pet-card * { box-sizing:border-box; }
+.k-pet-head { display:flex; align-items:center; gap:12px; margin-bottom:12px; }
+.k-pet-head strong { display:block; font-size:19px; overflow-wrap:anywhere; }
+.k-pet-card small { color:var(--k-muted,#abb2c2); font-size:11px; display:block; margin-top:5px; }
+.k-pet-preview { position:relative; overflow:hidden; display:block; flex:0 0 80px; width:80px; height:80px; }
+.k-pet-meter { display:grid; grid-template-columns:80px 1fr 32px; align-items:center; gap:8px; margin:9px 0; }
+.k-pet-meter meter { appearance:none; width:100%; height:6px; background:var(--k-field,#393b42); border:0; border-radius:4px; }
+.k-pet-meter meter::-moz-meter-bar { background:var(--k-accent,#aec7fa); border-radius:4px; }
+.k-pet-meter small { margin:0; text-align:end; }
+.k-pet-actions { display:grid; grid-template-columns:1fr 1fr; gap:7px; margin-top:16px; }
+.k-pet-card button { appearance:none; border:0; border-radius:7px; background:var(--k-field,#393b42); color:inherit; padding:9px 8px; cursor:pointer; font:inherit; }
+.k-pet-card button:hover { background:var(--k-hover,#434750); }
+.k-pet-card button:focus-visible,.k-pet-card input:focus-visible { outline:2px solid var(--k-accent,#aec7fa); outline-offset:2px; }
+.k-pet-message { min-height:30px; padding-top:10px; font-size:12px; color:var(--k-muted,#abb2c2); }
+.k-pet-card details { border-top:1px solid var(--k-border,#41454f); padding-top:12px; }
+.k-pet-card summary { cursor:pointer; padding:3px 0; color:var(--k-muted,#abb2c2); }
+.k-pet-rename { display:flex; gap:6px; margin:12px 0; }
+.k-pet-rename input { min-width:0; width:100%; border:1px solid var(--k-border,#41454f); background:var(--k-field,#393b42); color:inherit; padding:8px; border-radius:7px; font:inherit; }
+@media (prefers-reduced-motion:reduce) { #kamputa-companion[data-pet-mode='walk'] .k-pet-sprite { animation:none; } }
+
+:root[kamputa-theme="chromium"] #kamputa-companion { height:32px; align-self:start; }
+.k-pet-card button:disabled { opacity:.4; cursor:default; }
+#kamputa-companion[data-pet-intro] { outline:1px solid var(--k-accent,#aec7fa); outline-offset:-2px; border-radius:8px; }
+#k-pet-setup-guide { position:fixed; inset:0; width:100%; height:100%; pointer-events:none; z-index:2147483646; overflow:visible; color:var(--k-accent,#aec7fa); }
+#k-pet-setup-guide[hidden] { display:none; }
+#k-pet-setup-guide path { fill:none; stroke:currentColor; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; }

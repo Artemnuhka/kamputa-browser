@@ -1,0 +1,61 @@
+/* SPDX-License-Identifier: MPL-2.0 */
+/* Helium measurements: collapsed 28px / 6px radius; expanded frame 12px,
+   alignment top 3px, sides 7px; match cell 28px; row inset 2px 4px 0px. */
+:root#main-window[kamputa-theme="chromium"] #urlbar {
+ --urlbar-height:28px !important;
+ --urlbar-background-color:#393b42 !important; --urlbar-background-color-focus:#393b42 !important;
+ --urlbar-border-radius:6px !important; --urlbar-background-border-radius:6px !important;
+ --urlbar-background-border:0 !important; --urlbar-background-border-open:0 !important; --urlbar-background-border-focused:0 !important;
+ --urlbar-background-outline-focused:none !important; --urlbar-input-container-border:0 !important;
+ --urlbar-input-container-outline-open:none !important; --urlbar-input-container-outline-open-focused:none !important;
+ --urlbar-input-growth-open-inline:0px !important; --urlbar-input-growth-open-block:0px !important;
+ --urlbar-background-overhang-open:0px !important; --urlbarView-margin-inline:0px !important; --urlbarView-margin-block:0px !important;
+ min-height:28px !important; height:28px !important; outline:0 !important; border:0 !important; box-shadow:none !important;
+}
+/* Focus on the closed field must not introduce the blue Firefox outline. */
+:root#main-window[kamputa-theme="chromium"] #urlbar > .urlbar-background {
+ background:#393b42 !important; border:0 !important; outline:0 !important; border-radius:6px !important; box-shadow:none !important;
+}
+:root#main-window[kamputa-theme="chromium"] #urlbar > .urlbar-input-container {
+ height:28px !important; min-height:28px !important; margin:0 !important; padding:0 7px !important;
+ border:0 !important; outline:0 !important; box-shadow:none !important; border-radius:6px !important; column-gap:7px !important;
+}
+:root#main-window[kamputa-theme="chromium"] #urlbar[popover-open] > .urlbar-background {
+ inset-inline:-7px !important; inset-block-start:-3px !important; inset-block-end:-1px !important;
+ border-radius:12px 12px 0 0 !important; box-shadow:0 2px 8px #0003 !important;
+}
+:root#main-window[kamputa-theme="chromium"] #urlbar .urlbarView:popover-open {
+ inset-inline:-7px !important; padding:0 0 4px !important; margin:0 !important;
+ background:#393b42 !important; color:#e2e2ea !important; border:0 !important; border-radius:0 0 12px 12px !important;
+}
+:root#main-window[kamputa-theme="chromium"] #urlbar .urlbarView-background {
+ inset-inline:0 !important; background:#393b42 !important; border:0 !important; outline:0 !important;
+ border-radius:0 0 12px 12px !important; box-shadow:0 4px 8px #0003 !important;
+}
+:root#main-window[kamputa-theme="chromium"] #urlbar .urlbarView-body-inner { border:0 !important; padding:0 !important; }
+:root#main-window[kamputa-theme="chromium"] #urlbar .urlbarView-results { padding:0 4px !important; }
+:root#main-window[kamputa-theme="chromium"] #urlbar .urlbarView-row {
+ min-height:30px !important; margin:0 !important; padding:2px 0 0 !important; background:transparent !important;
+ border:0 !important; border-radius:0 !important; box-sizing:border-box !important; font:13px "Adwaita Sans","DejaVu Sans",sans-serif !important;
+}
+:root#main-window[kamputa-theme="chromium"] #urlbar .urlbarView-row-inner {
+ height:28px !important; min-height:28px !important; padding:0 7px !important; margin:0 !important;
+ box-sizing:border-box !important; border-radius:5px !important; font:13px/20px "Adwaita Sans","DejaVu Sans",sans-serif !important;
+ background:transparent !important; color:#dfe0e8 !important;
+}
+:root#main-window[kamputa-theme="chromium"] #urlbar .urlbarView-row[selected] .urlbarView-row-inner { background:#4a4d58 !important; }
+:root#main-window[kamputa-theme="chromium"] #urlbar .urlbarView-row:not([selected]):hover .urlbarView-row-inner { background:#43464f !important; }
+:root#main-window[kamputa-theme="chromium"] #urlbar .urlbarView-favicon {
+ width:16px !important; height:16px !important; min-width:16px !important; margin:0 7px 0 0 !important; padding:0 !important; opacity:.85;
+}
+:root#main-window[kamputa-theme="chromium"] #urlbar .urlbarView-type-icon { display:none !important; }
+:root#main-window[kamputa-theme="chromium"] #urlbar .urlbarView-action { font-size:13px !important; color:#adb2c1 !important; }
+:root#main-window[kamputa-theme="chromium"] #urlbar .urlbarView-url { font-size:13px !important; color:#a8b5ce !important; }
+:root#main-window[kamputa-theme="chromium"] #urlbar .urlbarView-title-separator::before { content:"—" !important; color:#9ca2b1 !important; }
+#k-urlbar-search-icon { width:16px; height:16px; min-width:16px; pointer-events:none; opacity:.8; }
+#urlbar[pageproxystate="valid"] #k-urlbar-search-icon { display:none; }
+/* A single flat surface: no clipped joint-background overhang above the input. */
+:root#main-window[kamputa-theme="chromium"] #urlbar { --urlbar-joint-background-overlap:0px !important; --urlbarView-joint-background-outset-block:0px !important; }
+:root#main-window[kamputa-theme="chromium"] #urlbar > .urlbar-input-container { background:#393b42 !important; }
+:root#main-window[kamputa-theme="chromium"] #urlbar[popover-open] > .urlbar-background { inset-block-start:0 !important; inset-block-end:0 !important; clip-path:none !important; box-shadow:none !important; }
+:root#main-window[kamputa-theme="chromium"] #urlbar .urlbarView-background { inset-block:0 !important; clip-path:none !important; box-shadow:none !important; }

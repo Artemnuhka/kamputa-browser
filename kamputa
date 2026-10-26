@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# SPDX-License-Identifier: MPL-2.0
+set -euo pipefail
+KAMPUTA_ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+KAMPUTA_PROFILE_DIR="${KAMPUTA_PROFILE:-${XDG_CONFIG_HOME:-$HOME/.config}/kamputa-browser/profile}"
+mkdir -p "$KAMPUTA_PROFILE_DIR"
+chmod 700 "$KAMPUTA_PROFILE_DIR"
+export KAMPUTA_PROFILE="$KAMPUTA_PROFILE_DIR"
+export MOZ_CRASHREPORTER_DISABLE=1
+export MOZ_APP_REMOTINGNAME=kamputa-browser
+export MOZ_APP_LAUNCHER="$KAMPUTA_ROOT/kamputa"
+while true; do
+  python3 "$KAMPUTA_ROOT/update.py" apply
+  python3 "$KAMPUTA_ROOT/configure-runtime.py"
+  python3 "$KAMPUTA_ROOT/import-profile.py" "$KAMPUTA_PROFILE_DIR"
+  "$KAMPUTA_ROOT/runtime/firefox" -purgecaches -no-remote -profile "$KAMPUTA_PROFILE_DIR" -class kamputa-browser -name kamputa-browser "$@"
+  if [[ -e "$KAMPUTA_PROFILE_DIR/kamputa-restart-update" ]]; then
+    rm -f -- "$KAMPUTA_PROFILE_DIR/kamputa-restart-update"
+    continue
+  fi
+  [[ -e "$KAMPUTA_PROFILE_DIR/kamputa-import.json" ]] || break
+done
