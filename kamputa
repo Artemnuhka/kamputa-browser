@@ -22,7 +22,12 @@ then
   exec "$KAMPUTA_ROOT/runtime/firefox" --profile "$KAMPUTA_PROFILE_DIR" "$@"
 fi
 while true; do
-  python3 "$KAMPUTA_ROOT/update.py" apply
+  KAMPUTA_UPDATE_RESULT="$(python3 "$KAMPUTA_ROOT/update.py" apply)"
+  printf '%s\n' "$KAMPUTA_UPDATE_RESULT"
+  # The update may replace this script too; use its new startup logic immediately.
+  if python3 -c 'import json,sys;sys.exit(0 if json.loads(sys.argv[1]).get("ok") is True else 1)' "$KAMPUTA_UPDATE_RESULT"; then
+    exec "$KAMPUTA_ROOT/kamputa" "$@"
+  fi
   python3 "$KAMPUTA_ROOT/configure-runtime.py"
   python3 "$KAMPUTA_ROOT/import-profile.py" "$KAMPUTA_PROFILE_DIR"
   "$KAMPUTA_ROOT/runtime/firefox" -purgecaches -profile "$KAMPUTA_PROFILE_DIR" "$@"

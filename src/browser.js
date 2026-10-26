@@ -258,10 +258,10 @@
       await sampleMemory();if(doc.getElementById('k-toast') || overlay)return;
       const threshold=pref.getIntPref('kamputa.memory.thresholdMB',350)*1024*1024,idle=pref.getIntPref('kamputa.memory.idleMinutes',15)*60000,now=Date.now();
       const candidates=[...gb.tabs].filter(t=>eligible(t) && now-Math.max(t.lastAccessed||now,api.lastUsed.get(t)||0)>=idle && (api.memory.get(t)||0)>=threshold && now-(api.cooldown.get(t)||0)>1800000).sort((a,b)=>api.memory.get(b)-api.memory.get(a));
-      const t=candidates[0];if(!t)return;
-      if(pref.getBoolPref('kamputa.memory.auto',false)){api.cooldown.set(t,now);await discard(t);return;}
-      const toast=html('aside',{id:'k-toast',role:'status'});toast.append(html('strong',{},'Освободим немного памяти?'),html('p',{},`«${t.label.slice(0,70)}» давно не используется и занимает примерно ${Math.round(api.memory.get(t)/1048576)} МБ. При следующем открытии страница загрузится заново.`));
-      const dismiss=()=>{api.cooldown.set(t,Date.now());toast.remove();};toast.append(button('Деактивировать',async()=>{const ok=await discard(t);dismiss();if(!ok)win.alert(t('Вкладка сейчас используется или защищена от выгрузки.'));}),button('Позже',dismiss));doc.documentElement.append(toast);
+      const candidate=candidates[0];if(!candidate)return;
+      if(pref.getBoolPref('kamputa.memory.auto',false)){api.cooldown.set(candidate,now);await discard(candidate);return;}
+      const toast=html('aside',{id:'k-toast',role:'status'});toast.append(html('strong',{},'Освободим немного памяти?'),html('p',{},`«${candidate.label.slice(0,70)}» давно не используется и занимает примерно ${Math.round(api.memory.get(candidate)/1048576)} МБ. При следующем открытии страница загрузится заново.`));
+      const dismiss=()=>{api.cooldown.set(candidate,Date.now());toast.remove();};toast.append(button('Деактивировать',async()=>{const ok=await discard(candidate);dismiss();if(!ok)win.alert(t('Вкладка сейчас используется или защищена от выгрузки.'));}),button('Позже',dismiss));doc.documentElement.append(toast);
     }
     // Extend Firefox's own preview so title, thumbnail and memory share one popup.
     pref.getDefaultBranch('').setBoolPref('browser.tabs.hoverPreview.enabled',true);

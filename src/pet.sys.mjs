@@ -7,22 +7,22 @@ let state,lease,serial=0;
 function save(){Services.prefs.setStringPref(KEY,JSON.stringify(state));}
 function advance(){
  if(!state){let raw;try{raw=JSON.parse(Services.prefs.getStringPref(KEY,''));}catch{}state=migratePet(raw,now());advancePet(state,now());save();}
- else if(now()-state.updated>=60000){advancePet(state,now());save();}
+ else if(now()-state.updated>=60000||now()<state.updated||new Date(now()).toDateString()!==new Date(state.updated).toDateString()){advancePet(state,now());save();}
 }
-function act(action,value){advance();const result=performPetAction(state,action,value,now());save();return {...result,message:text(result.message,{coins:result.reward||0})};}
+function act(action,value,admittedGame=false){advance();if(lease&&now()-lease.started>=130000)lease=null;if(lease&&['feed','clean','pet','chat','sleep','game'].includes(action))return {message:text('gameBusy')};const result=performPetAction(state,action,value,now(),admittedGame);save();return {...result,message:text(result.message,{coins:result.reward||0})};}
 export const Pet={
  getState(){advance();return petSnapshot(state,now());},cleanName,
  rename(name){const result=act('rename',name);if(result.message===text('nameRequired'))throw Error(result.message);return this.getState();},
- act(action,value){return act(action,value??(action==='feed'?'meal':undefined));},
+ act(action,value){if(action==='game')return {message:text('stopped')};return act(action,value??(action==='feed'?'meal':undefined));},
  beginGame(kind){
-  advance();const blocked=canPlay(state,now());if(blocked)throw Error(text(blocked));if(lease&&now()-lease.started<130000)throw Error(text('gameBusy'));
+  advance();advancePet(state,now());const blocked=canPlay(state,now());if(blocked)throw Error(text(blocked));if(lease&&now()-lease.started<130000)throw Error(text('gameBusy'));
   if(!['catch','memory'].includes(kind))throw Error(text('unknown'));
   lease={token:++serial,kind,started:now()};return {...lease};
  },
  finishGame(token,score){
-  if(!lease||lease.token!==token)throw Error(text('stopped'));const game=lease;lease=null;
+  if(!lease||lease.token!==token||now()-lease.started>=130000)throw Error(text('stopped'));const game=lease;lease=null;
   if(now()-game.started<(game.kind==='catch'?18000:1000))throw Error(text('tryAgain'));
-  return act('game',{kind:game.kind,score});
+  return act('game',{kind:game.kind,score},true);
  },
  cancelGame(token){if(lease?.token===token)lease=null;}
 };
@@ -42,7 +42,7 @@ export class PetView{
   this.position();const s=Pet.getState();this.button.hidden=!this.intro&&!Services.prefs.getBoolPref('kamputa.companion.enabled',true);
   this.button.title=(s.name||text('pet'))+' · '+text(s.need);this.button.setAttribute('aria-label',(s.name||text('pet'))+' · '+text('home'));this.button.toggleAttribute('data-pet-attention',!s.sleeping&&['hungry','tired','dirty'].includes(s.need));
   if(this.intro)this.animate('idle',60000);else if(s.sleeping)this.animate('sleep',60000);else if(this.mode==='sleep')this.animate('idle',12000);
-  if(this.panel?.state==='open')this.renderState(s);
+  if(this.panel?.state==='open'){this.renderState(s);if(this.section==='shop')this.renderShop();if(this.section==='journal')this.renderJournal();}
  }
  position(){const vertical=Services.prefs.getBoolPref('sidebar.verticalTabs',false);const parent=this.doc.getElementById(vertical?'nav-bar-customization-target':'TabsToolbar');if(!parent||this.button.parentElement===parent)return;if(vertical)parent.append(this.button);else parent.insertBefore(this.button,parent.querySelector('.titlebar-buttonbox-container'));}
  animate(mode,duration){if(this.mode!==mode){this.mode=mode;this.frame=0;}this.until=now()+duration;this.button.setAttribute('data-pet-mode',mode);this.paint();}
@@ -62,14 +62,14 @@ export class PetView{
  }
  tick(){
   if(this.win.closed)return;
-  if(this.game&&(this.doc.hidden||this.win.windowState===this.win.STATE_MINIMIZED)){this.cancelGame();this.say(text('stopped'));}
+  if(this.game&&(this.button.hidden||this.doc.hidden||this.win.windowState===this.win.STATE_MINIMIZED)){this.cancelGame();this.say(text('stopped'));}
   if(this.button.hidden||this.doc.hidden||this.win.windowState===this.win.STATE_MINIMIZED)return;
   const time=now();if(time-(this.lastCare||0)>1000){this.lastCare=time;if(this.panel?.state==='open')this.renderState(Pet.getState());else if(time-(this.lastRefresh||0)>60000){this.lastRefresh=time;this.refresh();}}
   if(!this.intro&&time>this.until){const s=Pet.getState();const mode=s.sleeping?'sleep':s.energy<20?'idle':['idle','idle','walk','laptop'][Math.floor(Math.random()*4)];this.animate(mode,mode==='walk'?9000:mode==='laptop'?35000:18000);}
   if(this.win.matchMedia('(prefers-reduced-motion: reduce)').matches){this.frame=0;this.paint();return;}
   const pace=this.mode==='sleep'?1000:this.mode==='idle'?1800:this.mode==='laptop'?380:240;if(time>=this.nextFrame){this.frame=(this.frame+1)%4;this.nextFrame=time+pace;this.paint();}
  }
- action(key,value){if(this.game){this.say(text('gameBusy'));return;}const r=Pet.act(key,value);if(r.animation)this.animate(r.animation,key==='sleep'?60000:4500);this.refresh();this.say(r.message);if(this.section==='shop')this.renderShop();if(this.section==='journal')this.renderJournal();}
+ action(key,value){if(this.game){this.say(text('gameBusy'));return;}const r=Pet.act(key,value);if(r.animation)this.animate(r.animation,key==='sleep'?60000:4500);this.refresh();this.say(r.message);}
  toggleMenu(){
   if(!this.panel)this.buildMenu();if(this.panel.state==='open'){this.panel.hidePopup();return;}
   const visit=Pet.act('visit');this.say(visit.message);this.renderState(Pet.getState());this.showSection('home');this.panel.openPopup(this.button,'after_end',0,4,false,false);
@@ -114,7 +114,7 @@ export class PetView{
   if(kind==='catch'){
    const cells=[];let target=-1;const ends=now()+20000;
    const next=()=>{if(this.game?.token!==token)return;const old=target;do{target=Math.floor(Math.random()*9);}while(target===old);cells.forEach((b,i)=>{b.textContent=i===target?'✦':'·';b.classList.toggle('is-target',i===target);b.setAttribute('aria-label',text(i===target?'star':'empty'));});};
-   for(let i=0;i<9;i++){const b=this.buttonEl('·',()=>{if(this.game?.token===token&&i===target){this.game.score++;next();}});cells.push(b);grid.append(b);}
+   for(let i=0;i<9;i++){const b=this.buttonEl('·',()=>{if(this.game?.token===token&&now()<ends&&i===target){this.game.score++;next();}});cells.push(b);grid.append(b);}
    const clock=()=>{if(this.game?.token!==token)return;const left=Math.ceil((ends-now())/1000);this.gameInfo.textContent=text('score')+': '+this.game.score+' · '+text('seconds')+': '+Math.max(0,left)+' s';if(left<=0){this.finishGame();return;}this.later(clock,200);};
    const hop=()=>{if(this.game?.token!==token)return;next();this.later(hop,1100);};hop();clock();this.animate('happy',21000);
   }else{

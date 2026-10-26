@@ -5,18 +5,19 @@ export const TOYS=[{id:'yarn',price:35},{id:'plant',price:25},{id:'lamp',price:4
 export const FOODS={meal:{price:0,satiety:25,mood:2},fish:{price:8,satiety:38,mood:6},treat:{price:4,satiety:9,mood:12}};
 const clamp=(v,min=0,max=100)=>Math.max(min,Math.min(max,v));
 const number=(v,fallback=0)=>Number.isFinite(v)?v:fallback;
+const timestamp=(v,at,fallback=0)=>clamp(number(v,fallback),0,at);
 const day=t=>{const d=new Date(t);return Math.floor(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate())/86400000);};
 export const cleanName=value=>String(value??'').replace(/[\u0000-\u001f\u007f-\u009f]/g,'').trim().slice(0,28);
 const event=(s,key,at,data={})=>{s.history.unshift({key,at,...data});s.history=s.history.slice(0,24);};
 function daily(s,at){const today=day(at);if(s.daily.day!==today)s.daily={day:today,feed:false,clean:false,game:false,claimed:false};}
 export function migratePet(raw,at=Date.now()){
  const r=raw&&typeof raw==='object'?raw:{};
- const s={schema:2,name:cleanName(r.name||''),named:typeof r.named==='boolean'?r.named:!!r.name,
+ const s={schema:2,name:cleanName(r.name||''),named:!!cleanName(r.name)&&r.named!==false,
   satiety:clamp(number(r.satiety,85)),energy:clamp(number(r.energy,85)),mood:clamp(number(r.mood,85)),hygiene:clamp(number(r.hygiene,85)),bond:clamp(number(r.bond,15)),
   xp:Math.max(0,number(r.xp)),coins:Math.max(0,Math.floor(number(r.coins,30))),sleeping:!!r.sleeping,
   born:Math.min(at,number(r.born,number(r.updated,at))||at),updated:Math.min(at,number(r.updated,at)),sleepStarted:Math.min(at,number(r.sleepStarted,at)),
-  last:{feed:number(r.last?.feed,number(r.lastFeed)),pet:number(r.last?.pet,number(r.lastPet)),clean:number(r.last?.clean),game:number(r.last?.game,number(r.lastPlay)),chat:number(r.last?.chat)},
-  games:Math.max(0,Math.floor(number(r.games))),best:{catch:clamp(number(r.best?.catch),0,99),memory:clamp(number(r.best?.memory),0,100)},
+  last:{feed:timestamp(r.last?.feed,at,number(r.lastFeed)),pet:timestamp(r.last?.pet,at,number(r.lastPet)),clean:timestamp(r.last?.clean,at),game:timestamp(r.last?.game,at,number(r.lastPlay)),chat:timestamp(r.last?.chat,at)},
+  games:Math.max(0,Math.floor(number(r.games))),best:{catch:clamp(number(r.best?.catch),0,100),memory:clamp(number(r.best?.memory),0,100)},
   owned:['cozy',...(Array.isArray(r.owned)?r.owned:[])].filter((v,i,a)=>['cozy','garden','night','yarn','plant','lamp'].includes(v)&&a.indexOf(v)===i),
   room:ROOMS.some(x=>x.id===r.room)?r.room:'cozy',toys:[],achievements:Array.isArray(r.achievements)?r.achievements.filter(x=>['named','care','gamer','friend','collector','week'].includes(x)):[],
   history:Array.isArray(r.history)?r.history.filter(x=>x&&typeof x.key==='string'&&Number.isFinite(x.at)).slice(0,24):[],
@@ -30,10 +31,10 @@ function achievements(s,at){
  }
 }
 export function advancePet(s,at=Date.now()){
- daily(s,at);const hours=Math.min(8,Math.max(0,at-s.updated)/3600000);if(!hours)return s;
+ daily(s,at);if(at<s.updated){const shift=s.updated-at;for(const key of Object.keys(s.last))s.last[key]=Math.max(0,s.last[key]-shift);s.sleepStarted=Math.max(0,s.sleepStarted-shift);s.updated=at;}const hours=Math.min(8,Math.max(0,at-s.updated)/3600000);if(!hours)return s;
  // Absence is capped; the pet never dies and does not demand constant attention.
- s.satiety=clamp(s.satiety-hours*(s.sleeping?2:5),15);s.energy=clamp(s.energy+hours*(s.sleeping?40:-5),10);
- s.hygiene=clamp(s.hygiene-hours*3,15);s.mood=clamp(s.mood-hours*(s.satiety<30?5:2),15);
+ s.satiety=clamp(s.satiety-hours*(s.sleeping?2:5),Math.min(15,s.satiety));s.energy=clamp(s.energy+hours*(s.sleeping?40:-5),s.sleeping?0:Math.min(10,s.energy));
+ s.hygiene=clamp(s.hygiene-hours*3,Math.min(15,s.hygiene));s.mood=clamp(s.mood-hours*(s.satiety<30?5:2),Math.min(15,s.mood));
  if(s.sleeping&&s.energy>=98&&at-s.sleepStarted>=60000){s.sleeping=false;event(s,'rested',at);}
  s.updated=at;return s;
 }
@@ -46,7 +47,8 @@ export function petSnapshot(s,at=Date.now()){
 export function canPlay(s,at=Date.now()){
  if(!s.named)return 'nameFirst';if(s.sleeping)return 'sleepFirst';if(s.energy<20)return 'tiredGame';if(s.satiety<20)return 'hungryGame';if(at-s.last.game<60000)return 'gameRest';return null;
 }
-export function performPetAction(s,action,value,at=Date.now()){
+// admittedGame is supplied only after the adapter validates a live game token.
+export function performPetAction(s,action,value,at=Date.now(),admittedGame=false){
  advancePet(s,at);if(action!=='visit'&&action!=='rename'&&!s.named)return {message:'nameFirst'};
  let message,animation='happy',reward=0;
  if(action==='rename'){
@@ -69,7 +71,7 @@ export function performPetAction(s,action,value,at=Date.now()){
  }else if(action==='sleep'){
   s.sleeping=!s.sleeping;if(s.sleeping)s.sleepStarted=at;message=s.sleeping?'goodnight':'awake';animation=s.sleeping?'sleep':'idle';event(s,s.sleeping?'sleep':'wake',at);
  }else if(action==='game'){
-  const blocked=canPlay(s,at);if(blocked)return {message:blocked};
+  const blocked=admittedGame?null:canPlay(s,at);if(blocked)return {message:blocked};
   if(!value||!['catch','memory'].includes(value.kind))return {message:'unknown'};
   const score=Math.floor(clamp(number(value.score),0,100));if(score<1)return {message:'tryAgain'};
   reward=value.kind==='memory'?12:Math.min(15,4+Math.floor(score/2));
