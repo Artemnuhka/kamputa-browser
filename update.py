@@ -18,6 +18,7 @@ def repo_name(value):
  if any(x in {'.','..'} or x.endswith('.git') for x in value.split('/')):fail('Нужен владелец/репозиторий без .git')
  return value
 class NoPublishedRelease(Exception):pass
+class RateLimited(Exception):pass
 class HTTPSRedirect(urllib.request.HTTPRedirectHandler):
  def redirect_request(self,req,fp,code,msg,headers,newurl):
   allowed_url(newurl)
@@ -46,7 +47,7 @@ def request(url,limit,target=None,digest=None):
   if e.code==404:
    if url.endswith('/releases/latest'):raise NoPublishedRelease()
    fail('Не удалось найти файл обновления')
-  if e.code in (403,429):fail('GitHub временно ограничил запросы. Попробуй позже')
+  if e.code in (403,429):raise RateLimited('GitHub временно ограничил запросы. Попробуй позже')
   raise
  if digest and sha.hexdigest()!=digest:fail('Контрольная сумма не совпала. Обновление отменено')
  return count if target else b''.join(chunks)
@@ -54,9 +55,25 @@ def asset_url(asset,repo):
  url=allowed_url(asset['browser_download_url']);p=urllib.parse.urlsplit(url)
  if p.hostname!='github.com' or not p.path.startswith('/'+repo+'/releases/download/'):fail('Файл релиза принадлежит другому репозиторию')
  return url
+def latest_without_api(repo):
+ # GitHub's public /latest redirect excludes draft and prerelease releases.
+ url='https://github.com/'+repo+'/releases/latest'
+ req=urllib.request.Request(url,method='HEAD',headers={'User-Agent':'kamputa-browser-updater/'+current()})
+ try:
+  with OPENER.open(req,timeout=45) as response:resolved=urllib.parse.urlsplit(allowed_url(response.url))
+ except urllib.error.HTTPError as e:
+  if e.code==404:raise NoPublishedRelease()
+  raise
+ prefix='/'+repo+'/releases/tag/'
+ if resolved.hostname!='github.com' or not resolved.path.startswith(prefix):fail('Файл релиза принадлежит другому репозиторию')
+ tag=resolved.path[len(prefix):];version(tag)
+ base='https://github.com/'+repo+'/releases/download/'+tag+'/'
+ return {'tag_name':tag,'assets':[{'name':'kamputa-update.json','browser_download_url':base+'kamputa-update.json'}],'without_api':True,'asset_base':base}
 def check(repo):
  repo=repo_name(repo)
- try:release=json.loads(request('https://api.github.com/repos/'+repo+'/releases/latest',2*1024**2))
+ try:
+  try:release=json.loads(request('https://api.github.com/repos/'+repo+'/releases/latest',2*1024**2))
+  except RateLimited:release=latest_without_api(repo)
  except NoPublishedRelease:return {'current':current(),'available':False,'repo':repo,'message':'Обновлений пока нет'}
  if release.get('draft') or release.get('prerelease'):fail('Этот релиз не является стабильным')
  target=release['tag_name'];newer=version(target)>version(current())
@@ -74,6 +91,7 @@ def check(repo):
  if not re.fullmatch(r'[A-Za-z0-9_.-]+\.tar\.xz',package.get('asset','')) or not re.fullmatch(r'[0-9a-f]{64}',package.get('sha256','')):fail('Некорректное описание файла обновления')
  asset=next((a for a in release['assets'] if a['name']==package['asset']),None)
  size=package.get('size')
+ if release.get('without_api'):asset={'size':size,'browser_download_url':release['asset_base']+package['asset']}
  if not asset or type(size) is not int or not 0<size<=MAX_PACKAGE or size!=asset['size']:fail('Размер пакета обновления не совпадает с манифестом')
  d=asset.get('digest')
  if d and d!='sha256:'+package['sha256']:fail('Контрольные суммы GitHub и манифеста отличаются')

@@ -32,9 +32,9 @@
 
 Download the package for your system from [Releases](https://github.com/Artemnuhka/kamputa-browser/releases):
 
-- **[RPM](https://github.com/Artemnuhka/kamputa-browser/releases/download/v0.5.2/kamputa-browser-0.5.2-1.x86_64.rpm) (x86_64):** Fedora and openSUSE. Install through your package manager, which resolves the shared-library dependencies.
-- **[DEB](https://github.com/Artemnuhka/kamputa-browser/releases/download/v0.5.2/kamputa-browser_0.5.2_amd64.deb) (amd64):** Debian / Ubuntu. Use `sudo apt install ./kamputa-browser_0.5.2_amd64.deb`.
-- **[AppImage](https://github.com/Artemnuhka/kamputa-browser/releases/download/v0.5.2/kamputa-browser-0.5.2-x86_64.AppImage) (x86_64):** make it executable, then run it. If FUSE is unavailable, use `./kamputa-browser-0.5.2-x86_64.AppImage --appimage-extract-and-run`.
+- **[RPM](https://github.com/Artemnuhka/kamputa-browser/releases/download/v0.5.3/kamputa-browser-0.5.3-1.x86_64.rpm) (x86_64):** Fedora and openSUSE. Install through your package manager, which resolves the shared-library dependencies.
+- **[DEB](https://github.com/Artemnuhka/kamputa-browser/releases/download/v0.5.3/kamputa-browser_0.5.3_amd64.deb) (amd64):** Debian / Ubuntu. Use `sudo apt install ./kamputa-browser_0.5.3_amd64.deb`.
+- **[AppImage](https://github.com/Artemnuhka/kamputa-browser/releases/download/v0.5.3/kamputa-browser-0.5.3-x86_64.AppImage) (x86_64):** make it executable, then run it. If FUSE is unavailable, use `./kamputa-browser-0.5.3-x86_64.AppImage --appimage-extract-and-run`.
 
 **Dependencies:**
 
