@@ -48,7 +48,7 @@ policies={'policies':{
   'browser.aboutwelcome.enabled':False,'browser.shell.checkDefaultBrowser':False,
  }.items()}}}
 (dest/'distribution/policies.json').write_text(json.dumps(policies,indent=2)+'\n')
-defaults={'intl.locale.requested':'ru','browser.tabs.inTitlebar':1,'browser.uidensity':1,'browser.tabs.hoverPreview.enabled':False,
+defaults={'intl.locale.requested':'ru','browser.tabs.inTitlebar':1,'browser.uidensity':1,'browser.tabs.hoverPreview.enabled':True,
 'browser.toolbars.bookmarks.visibility':'never','browser.startup.homepage':'about:kamputa',
 'browser.urlbar.suggest.bookmark':False,'browser.urlbar.scotchBonnet.enableOverride':False,
 'browser.startup.page':3,'browser.aboutwelcome.enabled':False,'browser.translations.automaticallyPopup':False,

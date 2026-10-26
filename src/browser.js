@@ -81,7 +81,6 @@
       title=t(title);if(title!==doc.title)doc.title=title;
     };
     renameTitle();
-    doc.getElementById('tabbrowser-tab-tooltip')?.addEventListener('popupshowing',e=>e.preventDefault());
     const titleObserver = new win.MutationObserver(()=>{
       renameTitle();
     });titleObserver.observe(doc.querySelector('title'),{childList:true});
@@ -264,25 +263,37 @@
       const toast=html('aside',{id:'k-toast',role:'status'});toast.append(html('strong',{},'Освободим немного памяти?'),html('p',{},`«${t.label.slice(0,70)}» давно не используется и занимает примерно ${Math.round(api.memory.get(t)/1048576)} МБ. При следующем открытии страница загрузится заново.`));
       const dismiss=()=>{api.cooldown.set(t,Date.now());toast.remove();};toast.append(button('Деактивировать',async()=>{const ok=await discard(t);dismiss();if(!ok)win.alert(t('Вкладка сейчас используется или защищена от выгрузки.'));}),button('Позже',dismiss));doc.documentElement.append(toast);
     }
-    let hoverTimer,hoverTab;
-    function hideHover(){win.clearTimeout(hoverTimer);doc.getElementById('k-hover')?.remove();hoverTab=null;}
-    gb.tabContainer.addEventListener('mouseover',e=>{
-      const t=e.target.closest('tab.tabbrowser-tab');if(!t || hoverTab===t)return;hideHover();hoverTab=t;
-      hoverTimer=win.setTimeout(async()=>{
-        if(hoverTab!==t)return;
-        try{if(!api.sampledAt || Date.now()-api.sampledAt>10000)await sampleMemory();}catch(e){Cu.reportError(e);}
-        if(hoverTab!==t || !t.isConnected)return;
-        const tip=html('div',{id:'k-hover',role:'tooltip'});tip.append(html('div',{class:'k-title'},t.label));
-        let host='';try{host=t.linkedBrowser.currentURI.displayHost;}catch{}tip.append(html('div',{},host));
-        const memory=api.memory.get(t);tip.append(html('div',{class:'k-memory'},t.hasAttribute('pending')?'Вкладка деактивирована':memory===undefined?'Потребление памяти недоступно':`Память: ≈ ${Math.round(memory/1048576)} МБ`),html('small',{},'Приблизительное потребление памяти'));
-        const rect=t.getBoundingClientRect();tip.style.left=Math.max(8,Math.min(rect.left,win.innerWidth-305))+'px';tip.style.top=(rect.bottom+8)+'px';doc.documentElement.append(tip);
-      },450);
-    });
-    gb.tabContainer.addEventListener('mouseout',e=>{if(!e.relatedTarget || !e.relatedTarget.closest?.('tab.tabbrowser-tab') || e.relatedTarget.closest('tab.tabbrowser-tab')!==hoverTab)hideHover();});
-    gb.tabContainer.addEventListener('TabSelect',()=>{api.lastUsed.set(gb.selectedTab,Date.now());hideHover();});
+    // Extend Firefox's own preview so title, thumbnail and memory share one popup.
+    pref.getDefaultBranch('').setBoolPref('browser.tabs.hoverPreview.enabled',true);
+    gb.tabContainer.ensureTabPreviewPanelLoaded();
+    const preview=doc.getElementById('tab-preview-panel');
+    const tabPanel=gb.tabContainer.previewPanel.tabPanel;
+    const memoryFooter=html('div',{id:'kamputa-tab-preview-memory','aria-label':'Приблизительное потребление памяти'});
+    preview.querySelector('.tab-preview-content-main').append(memoryFooter);
+    let previewTab=null,previewVersion=0,previewSample=null;
+    function renderPreviewMemory(tab){
+      const bytes=api.memory.get(tab);
+      memoryFooter.textContent=tab.hasAttribute('pending')?t('Вкладка деактивирована'):
+        bytes===undefined?t('Потребление памяти недоступно'):
+        t('Память: ≈ ')+Math.round(bytes/1048576)+t(' МБ');
+    }
+    function updatePreviewMemory(tab){
+      previewTab=tab;const version=++previewVersion;
+      renderPreviewMemory(tab);
+      if(api.sampledAt && Date.now()-api.sampledAt<=10000)return;
+      previewSample ||= sampleMemory().finally(()=>{previewSample=null;});
+      previewSample.then(()=>{
+        if(!win.closed && version===previewVersion && previewTab===tab && tab.isConnected)renderPreviewMemory(tab);
+      }).catch(Cu.reportError);
+    }
+    const activatePreview=tabPanel.activate;
+    tabPanel.activate=function(tab){updatePreviewMemory(tab);return activatePreview.call(this,tab);};
+    preview.addEventListener('popuphidden',()=>{previewTab=null;++previewVersion;});
+    preview.addEventListener('TabPreviewUpdated',()=>{if(previewTab?.isConnected)renderPreviewMemory(previewTab);});
+    gb.tabContainer.addEventListener('TabSelect',()=>api.lastUsed.set(gb.selectedTab,Date.now()));
     const updateTimer=win.setTimeout(()=>{if(!PrivateBrowsingUtils.isWindowPrivate(win))Updates.autoCheck();},15000);
     const timer=win.setInterval(()=>scan().catch(Cu.reportError),30000);
-    win.addEventListener('unload',()=>{petGuide?.remove();win.removeEventListener('resize',updatePetGuide);gb.tabContainer.removeEventListener('TabSelect',updatePetGuide);petView.destroy();win.clearTimeout(updateTimer);win.clearInterval(timer);win.clearTimeout(hoverTimer);pref.removeObserver('kamputa.',observer);pref.removeObserver('extensions.activeThemeID',observer);titleObserver.disconnect();},{once:true});
+    win.addEventListener('unload',()=>{petGuide?.remove();win.removeEventListener('resize',updatePetGuide);gb.tabContainer.removeEventListener('TabSelect',updatePetGuide);petView.destroy();win.clearTimeout(updateTimer);win.clearInterval(timer);pref.removeObserver('kamputa.',observer);pref.removeObserver('extensions.activeThemeID',observer);titleObserver.disconnect();},{once:true});
     if(!pref.getBoolPref('kamputa.onboarding.completed',false) && !PrivateBrowsingUtils.isWindowPrivate(win)) {
       const {SessionStore}=ChromeUtils.importESModule('moz-src:///browser/components/sessionstore/SessionStore.sys.mjs');
       SessionStore.promiseAllWindowsRestored.then(async()=>{const initial=await win.gBrowserInit.uriToLoadPromise;const explicit=(Array.isArray(initial)?initial:[initial]).some(uri=>String(uri)==='about:kamputa-setup');if(!explicit&&!win.closed&&!pref.getBoolPref('kamputa.onboarding.completed',false))open('wizard');}).catch(Cu.reportError);
