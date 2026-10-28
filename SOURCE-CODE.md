@@ -1,11 +1,11 @@
 # Corresponding source and modifications
 
-## kamputa browser 0.6.1
+## kamputa browser 0.6.2
 
 All Kamputa modifications are available in preferred source form under MPL 2.0 at:
-https://github.com/Artemnuhka/kamputa-browser/tree/v0.6.1
+https://github.com/Artemnuhka/kamputa-browser/tree/v0.6.2
 
-The release also includes `kamputa-browser-0.6.1-source.tar.xz`. Source files are not minified. `src/` contains the privileged browser UI and localization modifications. `assets/` contains the original project PNG / SVG resources used to generate branding; `brand-runtime.py`, `normalize-jars.py`, `prepare-locales.py`, `build.py` and `packaging/` describe the transformations and packaging. No developer profiles or local test harnesses are included.
+The release also includes `kamputa-browser-0.6.2-source.tar.xz`. Source files are not minified. `src/` contains the privileged browser UI and localization modifications. `assets/` contains the original project PNG / SVG resources used to generate branding; `brand-runtime.py`, `normalize-jars.py`, `prepare-locales.py`, `build.py` and `packaging/` describe the transformations and packaging. No developer profiles or local test harnesses are included.
 
 ## Mozilla Firefox / Gecko 158.0.1
 

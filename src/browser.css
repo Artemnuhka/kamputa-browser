@@ -49,9 +49,6 @@
 #k-overlay input[type=checkbox] { accent-color:#285bb5; width:18px; height:18px; }
 #k-overlay .k-row { display:flex; gap:10px; flex-wrap:wrap; margin:15px 0; }
 #k-overlay button:focus-visible { outline:3px solid #89ace5; outline-offset:3px; }
-#k-toast { position:fixed; right:22px; bottom:22px; z-index:2147483644; max-width:390px; border:1px solid #d5dfea; padding:20px; background:#fff; color:#293347; box-shadow:0 12px 45px #17253c25; border-radius:18px; font:14px system-ui; }
-#k-toast p { line-height:1.5; margin:10px 0 16px; }
-#k-toast button { cursor:pointer; font:inherit; border:0; border-radius:25px; padding:9px 16px; background:#eaf1ff; color:#285bb5; margin-right:8px; }
 /* Geometry measured against the user's Helium Linux reference (1920×1040). */
 :root[kamputa-theme="chromium"] { font-family:"Adwaita Sans","DejaVu Sans",sans-serif !important; font-size:13px !important; --tab-min-height:28px !important; --tab-block-margin:0px !important; --toolbarbutton-inner-padding:5px !important; --toolbarbutton-outer-padding:1px !important; --urlbar-min-height:28px !important; }
 :root[kamputa-theme="chromium"] #TabsToolbar { padding:2px 0 !important; min-height:32px !important; max-height:32px !important; }
@@ -114,8 +111,6 @@
 #k-overlay .k-status { color:#a6d5b6; }
 #k-overlay label { color:#bdc4d3; }
 #k-overlay select, #k-overlay input[type=number] { border-color:#484e5d; background:#32353e; color:#e2e2ea; }
-#k-toast { background:#292c33; color:#e2e2ea; border-color:#444954; }
-#k-toast button { background:#373e50; color:#b9cff4; }
 :root[kamputa-theme="chromium"] #tabbrowser-tabs { padding-inline:0 !important; }
 :root[kamputa-theme="chromium"] .tabbrowser-tab:not([pinned]) { max-width:202px !important; padding-inline:3px !important; }
 :root[kamputa-theme="chromium"] .tab-content { padding-inline:6px !important; }
@@ -215,12 +210,12 @@
 
 /* Shared Material roles for Kamputa's own setup, settings and memory UI. */
 #k-overlay { background:var(--k-page,#202228); color:var(--k-text,#e2e2ea); }
-#k-overlay .k-card, #k-toast { background:var(--k-surface,#292c33); color:var(--k-text,#e2e2ea); border-color:var(--k-border,#41454f); }
+#k-overlay .k-card { background:var(--k-surface,#292c33); color:var(--k-text,#e2e2ea); border-color:var(--k-border,#41454f); }
 #k-overlay p, #k-overlay small, #k-overlay label, #k-overlay .k-kicker, #k-overlay .k-status { color:var(--k-muted,#abb2c2); }
 #k-overlay .k-option { background:var(--k-field,#393b42); color:var(--k-text,#e2e2ea); }
 #k-overlay .k-option[aria-pressed="true"] { background:var(--k-accentContainer,#3a4357); border-color:var(--k-accent,#aec7fa); }
 #k-overlay .k-primary { background:var(--k-accent,#aec7fa); color:var(--k-onAccent,#152741); }
-#k-overlay .k-secondary, #k-toast button { background:var(--k-field,#393b42); color:var(--k-text,#e2e2ea); }
+#k-overlay .k-secondary { background:var(--k-field,#393b42); color:var(--k-text,#e2e2ea); }
 #k-overlay .k-link { color:var(--k-link,#b7cdf5); }
 #k-overlay .k-footer { border-color:var(--k-border,#41454f); }
 #k-overlay .k-dot { background:var(--k-border,#41454f); }
@@ -240,3 +235,21 @@
  line-height:1.4;
  overflow-wrap:anywhere;
 }
+
+/* Memory suggestion follows its tab and uses the current palette. */
+#k-toast { --panel-background:var(--k-surface,#292c33); --panel-color:var(--k-text,#e2e2ea); --panel-border-color:var(--k-border,#41454f); }
+#k-toast .panel-arrowcontent { padding:0 !important; background:var(--k-surface,#292c33) !important; color:var(--k-text,#e2e2ea) !important; border:1px solid var(--k-border,#41454f) !important; border-radius:14px !important; box-shadow:0 8px 28px #0006 !important; }
+#k-toast .k-memory-card { box-sizing:border-box; width:310px; max-width:calc(100vw - 32px); padding:16px; color:var(--k-text,#e2e2ea); font:13px system-ui; }
+#k-toast .k-memory-card * { box-sizing:border-box; }
+#k-toast .k-memory-header { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+#k-toast .k-memory-header strong { font-size:14px; }
+#k-toast .k-memory-tab { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--k-text,#e2e2ea); margin-top:10px; font-weight:600; }
+#k-toast p { margin:6px 0 15px; line-height:1.45; color:var(--k-muted,#aeb7c8); }
+#k-toast button { cursor:pointer; font:inherit; border:0; }
+#k-toast .k-memory-close { display:grid; place-items:center; padding:0; width:26px; height:26px; border-radius:50%; color:inherit; background:transparent; font-size:20px; line-height:1; }
+#k-toast .k-memory-close:hover { background:var(--k-field,#393b42); }
+#k-toast .k-memory-actions { display:flex; justify-content:flex-end; gap:8px; }
+#k-toast .k-memory-actions button { border-radius:9px; padding:8px 11px; font-weight:600; }
+#k-toast .k-memory-decline { background:var(--k-field,#393b42); color:var(--k-text,#e2e2ea); }
+#k-toast .k-memory-accept { background:var(--k-accent,#a9c7fa); color:var(--k-onAccent,#172435); }
+#k-toast button:focus-visible { outline:2px solid var(--k-accent,#a9c7fa); outline-offset:2px; }

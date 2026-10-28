@@ -21,6 +21,7 @@
   const SearchService = ChromeUtils.importESModule('moz-src:///toolkit/components/search/SearchService.sys.mjs').SearchService;
   const { PrivateBrowsingUtils } = ChromeUtils.importESModule('resource://gre/modules/PrivateBrowsingUtils.sys.mjs');
   const { webrtcUI } = ChromeUtils.importESModule('resource:///modules/webrtcUI.sys.mjs');
+  const {SessionStore}=ChromeUtils.importESModule('moz-src:///browser/components/sessionstore/SessionStore.sys.mjs');
   function setup(win) {
     if (win.Kamputa || !win.gBrowser) return;
     const doc = win.document, gb = win.gBrowser;
@@ -253,15 +254,35 @@
       const memory=new Map();for(const [t,pids] of tabs){let bytes=0,known=false;for(const pid of pids){if(processes.has(pid)){known=true;bytes+=processes.get(pid)/owners.get(pid).size;}}if(known)memory.set(t,bytes);}
       api.memory=memory;api.sampledAt=Date.now();return memory;
     }
+    let scanning=false;
+    const dismissedKey='kamputa.memory.dismissed';
+    function dismissed(tab){return SessionStore.getCustomTabValue(tab,dismissedKey)==='1';}
+    function memoryPrompt(candidate,bytes){
+      const panel=doc.createXULElement('panel');panel.id='k-toast';panel.setAttribute('type','arrow');panel.setAttribute('role','dialog');panel.setAttribute('aria-label',t('Экономия памяти'));
+      const el=(tag,cls,label)=>{const node=doc.createElementNS('http://www.w3.org/1999/xhtml',tag);if(cls)node.className=cls;if(label!==undefined)node.textContent=label;return node;};
+      const card=el('div','k-memory-card'),header=el('div','k-memory-header'),title=el('strong','',t('Освободить память?'));
+      const close=el('button','k-memory-close','×');close.type='button';close.title=t('Не предлагать для этой вкладки');close.setAttribute('aria-label',close.title);
+      header.append(title,close);card.append(header,el('div','k-memory-tab',candidate.label),el('p','',t('Вкладка давно не используется и занимает около {memory} МБ.').replace('{memory}',String(Math.round(bytes/1048576)))));
+      const actions=el('div','k-memory-actions'),decline=el('button','k-memory-decline',t('Не предлагать')),accept=el('button','k-memory-accept',t('Деактивировать'));decline.type=accept.type='button';actions.append(decline,accept);card.append(actions);panel.append(card);
+      let accepted=false;
+      const hide=()=>panel.hidePopup();
+      close.addEventListener('click',hide);decline.addEventListener('click',hide);
+      accept.addEventListener('click',async()=>{accepted=true;accept.disabled=true;api.cooldown.set(candidate,Date.now());const ok=await discard(candidate).catch(Cu.reportError);hide();if(!ok)win.alert(t('Вкладка сейчас используется или защищена от выгрузки.'));});
+      panel.addEventListener('popuphiding',()=>{if(!accepted&&candidate.isConnected&&!candidate.closing)SessionStore.setCustomTabValue(candidate,dismissedKey,'1');},{once:true});
+      panel.addEventListener('popuphidden',()=>panel.remove(),{once:true});
+      doc.getElementById('mainPopupSet').append(panel);panel.openPopup(candidate,'after_start',0,4,false,false);
+    }
     async function scan(){
       if(!pref.getBoolPref('kamputa.memory.enabled',true) || PrivateBrowsingUtils.isWindowPrivate(win))return;
-      await sampleMemory();if(doc.getElementById('k-toast') || overlay)return;
+      if(scanning || doc.getElementById('k-toast') || overlay)return;scanning=true;
+      try{
+      await sampleMemory();if(win.closed || doc.getElementById('k-toast') || overlay)return;
       const threshold=pref.getIntPref('kamputa.memory.thresholdMB',350)*1024*1024,idle=pref.getIntPref('kamputa.memory.idleMinutes',15)*60000,now=Date.now();
-      const candidates=[...gb.tabs].filter(t=>eligible(t) && now-Math.max(t.lastAccessed||now,api.lastUsed.get(t)||0)>=idle && (api.memory.get(t)||0)>=threshold && now-(api.cooldown.get(t)||0)>1800000).sort((a,b)=>api.memory.get(b)-api.memory.get(a));
+      const candidates=[...gb.tabs].filter(t=>eligible(t) && !dismissed(t) && now-Math.max(t.lastAccessed||now,api.lastUsed.get(t)||0)>=idle && (api.memory.get(t)||0)>=threshold && now-(api.cooldown.get(t)||0)>1800000).sort((a,b)=>api.memory.get(b)-api.memory.get(a));
       const candidate=candidates[0];if(!candidate)return;
       if(pref.getBoolPref('kamputa.memory.auto',false)){api.cooldown.set(candidate,now);await discard(candidate);return;}
-      const toast=html('aside',{id:'k-toast',role:'status'});toast.append(html('strong',{},'Освободим немного памяти?'),html('p',{},`«${candidate.label.slice(0,70)}» давно не используется и занимает примерно ${Math.round(api.memory.get(candidate)/1048576)} МБ. При следующем открытии страница загрузится заново.`));
-      const dismiss=()=>{api.cooldown.set(candidate,Date.now());toast.remove();};toast.append(button('Деактивировать',async()=>{const ok=await discard(candidate);dismiss();if(!ok)win.alert(t('Вкладка сейчас используется или защищена от выгрузки.'));}),button('Позже',dismiss));doc.documentElement.append(toast);
+      memoryPrompt(candidate,api.memory.get(candidate));
+      }finally{scanning=false;}
     }
     // Extend Firefox's own preview so title, thumbnail and memory share one popup.
     pref.getDefaultBranch('').setBoolPref('browser.tabs.hoverPreview.enabled',true);
@@ -295,7 +316,6 @@
     const timer=win.setInterval(()=>scan().catch(Cu.reportError),30000);
     win.addEventListener('unload',()=>{petGuide?.remove();win.removeEventListener('resize',updatePetGuide);gb.tabContainer.removeEventListener('TabSelect',updatePetGuide);petView.destroy();win.clearTimeout(updateTimer);win.clearInterval(timer);pref.removeObserver('kamputa.',observer);pref.removeObserver('extensions.activeThemeID',observer);titleObserver.disconnect();},{once:true});
     if(!pref.getBoolPref('kamputa.onboarding.completed',false) && !PrivateBrowsingUtils.isWindowPrivate(win)) {
-      const {SessionStore}=ChromeUtils.importESModule('moz-src:///browser/components/sessionstore/SessionStore.sys.mjs');
       SessionStore.promiseAllWindowsRestored.then(async()=>{const initial=await win.gBrowserInit.uriToLoadPromise;const explicit=(Array.isArray(initial)?initial:[initial]).some(uri=>String(uri)==='about:kamputa-setup');if(!explicit&&!win.closed&&!pref.getBoolPref('kamputa.onboarding.completed',false))open('wizard');}).catch(Cu.reportError);
     }
     const defaults=pref.getDefaultBranch('');

@@ -32,9 +32,9 @@
 
 Скачай пакет для своей системы в разделе [Releases](https://github.com/Artemnuhka/kamputa-browser/releases):
 
-- **[RPM](https://github.com/Artemnuhka/kamputa-browser/releases/download/v0.6.1/kamputa-browser-0.6.1-1.x86_64.rpm) (x86_64):** для Fedora и openSUSE. Установи через пакетный менеджер — он подтянет необходимые библиотеки.
-- **[DEB](https://github.com/Artemnuhka/kamputa-browser/releases/download/v0.6.1/kamputa-browser_0.6.1_amd64.deb) (amd64):** для Debian / Ubuntu. Команда установки: `sudo apt install ./kamputa-browser_0.6.1_amd64.deb`.
-- **[AppImage](https://github.com/Artemnuhka/kamputa-browser/releases/download/v0.6.1/kamputa-browser-0.6.1-x86_64.AppImage) (x86_64):** разреши выполнение файла и запусти его. Если FUSE недоступен, используй `./kamputa-browser-0.6.1-x86_64.AppImage --appimage-extract-and-run`.
+- **[RPM](https://github.com/Artemnuhka/kamputa-browser/releases/download/v0.6.2/kamputa-browser-0.6.2-1.x86_64.rpm) (x86_64):** для Fedora и openSUSE. Установи через пакетный менеджер — он подтянет необходимые библиотеки.
+- **[DEB](https://github.com/Artemnuhka/kamputa-browser/releases/download/v0.6.2/kamputa-browser_0.6.2_amd64.deb) (amd64):** для Debian / Ubuntu. Команда установки: `sudo apt install ./kamputa-browser_0.6.2_amd64.deb`.
+- **[AppImage](https://github.com/Artemnuhka/kamputa-browser/releases/download/v0.6.2/kamputa-browser-0.6.2-x86_64.AppImage) (x86_64):** разреши выполнение файла и запусти его. Если FUSE недоступен, используй `./kamputa-browser-0.6.2-x86_64.AppImage --appimage-extract-and-run`.
 
 **Зависимости:**
 
