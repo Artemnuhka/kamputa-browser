@@ -31,7 +31,10 @@ export class PetView{
  constructor(win,button){
   this.win=win;this.doc=win.document;this.button=button;this.mode='idle';this.until=now()+7000;this.nextFrame=0;this.frame=0;this.section='home';this.gameTimers=new Set();
   button.replaceChildren();this.sprite=this.el('span',{class:'k-pet-sprite','aria-hidden':'true'});this.frameNode=this.el('span',{class:'k-pet-frame'});this.sprite.append(this.frameNode);button.append(this.sprite);
-  this.observer={observe:()=>this.refresh()};for(const k of [KEY,'kamputa.companion.enabled','sidebar.verticalTabs'])Services.prefs.addObserver(k,this.observer);
+  this.roamer=this.el('span',{class:'k-pet-roamer','aria-hidden':'true'});this.roamer.hidden=true;this.roamerFrame=this.el('span',{class:'k-pet-frame'});this.roamer.append(this.roamerFrame);this.doc.documentElement.append(this.roamer);this.nextRoam=now()+45000+Math.random()*60000;
+  this.stopForInput=()=>this.stopRoam();for(const id of ['nav-bar','TabsToolbar'])this.doc.getElementById(id)?.addEventListener('pointerenter',this.stopForInput);this.win.gURLBar?.inputField?.addEventListener('focus',this.stopForInput);
+  this.onNewTab=()=>{const time=now(),s=Pet.getState();if(!this.button.hidden&&!this.intro&&!this.roaming&&!this.game&&!['eat','happy'].includes(this.mode)&&!s.sleeping&&s.named&&time-(this.lastTabReaction||0)>90000&&Math.random()<.35){this.lastTabReaction=time;this.animate('happy',4500);}};this.win.gBrowser.tabContainer.addEventListener('TabOpen',this.onNewTab);
+  this.observer={observe:()=>this.refresh()};for(const k of [KEY,'kamputa.companion.enabled','kamputa.companion.wander','sidebar.verticalTabs'])Services.prefs.addObserver(k,this.observer);
   this.timer=win.setInterval(()=>this.tick(),180);this.refresh();
  }
  el(tag,attrs={},label){const n=this.doc.createElementNS('http://www.w3.org/1999/xhtml',tag);for(const[k,v]of Object.entries(attrs))n.setAttribute(k,v);if(label!==undefined)n.textContent=label;return n;}
@@ -40,12 +43,13 @@ export class PetView{
  say(message){if(this.message)this.message.textContent=message;}
  refresh(){
   this.position();const s=Pet.getState();this.button.hidden=!this.intro&&!Services.prefs.getBoolPref('kamputa.companion.enabled',true);
+  if(this.button.hidden||s.sleeping||!Services.prefs.getBoolPref('kamputa.companion.wander',true))this.stopRoam();
   this.button.title=(s.name||text('pet'))+' · '+text(s.need);this.button.setAttribute('aria-label',(s.name||text('pet'))+' · '+text('home'));this.button.toggleAttribute('data-pet-attention',!s.sleeping&&['hungry','tired','dirty'].includes(s.need));
   if(this.intro)this.animate('idle',60000);else if(s.sleeping)this.animate('sleep',60000);else if(this.mode==='sleep')this.animate('idle',12000);
   if(this.panel?.state==='open'){this.renderState(s);if(this.section==='shop')this.renderShop();if(this.section==='journal')this.renderJournal();}
  }
  position(){const vertical=Services.prefs.getBoolPref('sidebar.verticalTabs',false);const parent=this.doc.getElementById(vertical?'nav-bar-customization-target':'TabsToolbar');if(!parent||this.button.parentElement===parent)return;if(vertical)parent.append(this.button);else parent.insertBefore(this.button,parent.querySelector('.titlebar-buttonbox-container'));}
- animate(mode,duration){if(this.mode!==mode){this.mode=mode;this.frame=0;}this.until=now()+duration;this.button.setAttribute('data-pet-mode',mode);this.paint();}
+ animate(mode,duration){if(this.mode!==mode){this.mode=mode;this.frame=0;}this.until=now()+duration;this.button.setAttribute('data-pet-mode',mode);this.room?.setAttribute('data-pet-mode',mode);this.paint();}
  setIntro(active){this.intro=active;this.button.toggleAttribute('data-pet-intro',active);this.refresh();}
  paint(){
   const row=rows[this.mode]||0,frames=FRAMES[row],box=frames[this.frame];
@@ -58,20 +62,35 @@ export class PetView{
    node.style.left=(width/2-(left+right)/2*scale)+'px';node.style.top=(height-1-box[3]*scale)+'px';
   };
   draw(this.frameNode,56,32,30);
+  if(this.roaming)draw(this.roamerFrame,56,32,30);
   if(this.previewFrame)draw(this.previewFrame,112,104,90);
  }
+ canRoam(){
+  const bar=this.doc.getElementById('urlbar'),nav=this.doc.getElementById('nav-bar'),tabs=this.doc.getElementById('TabsToolbar'),s=Pet.getState();
+  return !!bar&&!this.button.hidden&&!this.intro&&!this.game&&!['eat','happy'].includes(this.mode)&&this.panel?.state!=='open'&&!this.doc.hidden&&!this.win.fullScreen&&this.win.windowState!==this.win.STATE_MINIMIZED&&s.named&&!s.sleeping&&s.energy>=25&&Services.prefs.getBoolPref('kamputa.companion.wander',true)&&!this.win.matchMedia('(prefers-reduced-motion: reduce)').matches&&!this.win.gURLBar?.focused&&!this.win.gURLBar?.view?.isOpen&&!nav?.matches(':hover')&&!tabs?.matches(':hover');
+ }
+ startRoam(route){
+  if(!this.canRoam())return false;const vertical=Services.prefs.getBoolPref('sidebar.verticalTabs',false),routes=vertical?['urlTop','urlBottom']:['urlTop','urlBottom','tabs'];route=routes.includes(route)?route:routes[Math.floor(Math.random()*routes.length)];
+  const r=this.doc.getElementById(route==='tabs'?'tabbrowser-tabs':'urlbar').getBoundingClientRect();if(r.width<180||r.height<20)return false;
+  const fromLeft=Math.random()<.5,low=r.left+8,high=r.right-64;if(high<=low)return false;
+  const top=route==='tabs'?Math.max(0,r.bottom-32):route==='urlTop'?Math.max(0,r.top-28):r.bottom-5;
+  this.roaming={route,start:now(),end:now()+12000,from:fromLeft?low:high,to:fromLeft?high:low,top};
+  this.roamer.style.top=this.roaming.top+'px';this.roamer.style.left=this.roaming.from+'px';this.roamer.style.transform=fromLeft?'':'scaleX(-1)';this.roamer.hidden=false;this.sprite.style.visibility='hidden';this.animate('walk',13000);return true;
+ }
+ stopRoam(){if(!this.roaming)return;this.roaming=null;this.roamer.hidden=true;this.sprite.style.visibility='';this.nextRoam=now()+120000+Math.random()*180000;this.animate('idle',12000);}
  tick(){
   if(this.win.closed)return;
   if(this.game&&(this.button.hidden||this.doc.hidden||this.win.windowState===this.win.STATE_MINIMIZED)){this.cancelGame();this.say(text('stopped'));}
-  if(this.button.hidden||this.doc.hidden||this.win.windowState===this.win.STATE_MINIMIZED)return;
+  if(this.button.hidden||this.doc.hidden||this.win.windowState===this.win.STATE_MINIMIZED){this.stopRoam();return;}
   const time=now();if(time-(this.lastCare||0)>1000){this.lastCare=time;if(this.panel?.state==='open')this.renderState(Pet.getState());else if(time-(this.lastRefresh||0)>60000){this.lastRefresh=time;this.refresh();}}
+  if(this.roaming){if(!this.canRoam()||time>=this.roaming.end)this.stopRoam();else{const p=(time-this.roaming.start)/(this.roaming.end-this.roaming.start);this.roamer.style.left=(this.roaming.from+(this.roaming.to-this.roaming.from)*p)+'px';}}else if(time>=this.nextRoam){this.nextRoam=time+60000;if(this.startRoam())this.nextRoam=time+300000;}
   if(!this.intro&&time>this.until){const s=Pet.getState();const mode=s.sleeping?'sleep':s.energy<20?'idle':['idle','idle','walk','laptop'][Math.floor(Math.random()*4)];this.animate(mode,mode==='walk'?9000:mode==='laptop'?35000:18000);}
   if(this.win.matchMedia('(prefers-reduced-motion: reduce)').matches){this.frame=0;this.paint();return;}
   const pace=this.mode==='sleep'?1000:this.mode==='idle'?1800:this.mode==='laptop'?380:240;if(time>=this.nextFrame){this.frame=(this.frame+1)%4;this.nextFrame=time+pace;this.paint();}
  }
  action(key,value){if(this.game){this.say(text('gameBusy'));return;}const r=Pet.act(key,value);if(r.animation)this.animate(r.animation,key==='sleep'?60000:4500);this.refresh();this.say(r.message);}
  toggleMenu(){
-  if(!this.panel)this.buildMenu();if(this.panel.state==='open'){this.panel.hidePopup();return;}
+  this.stopRoam();if(!this.panel)this.buildMenu();if(this.panel.state==='open'){this.panel.hidePopup();return;}
   const visit=Pet.act('visit');this.say(visit.message);this.renderState(Pet.getState());this.showSection('home');this.panel.openPopup(this.button,'after_end',0,4,false,false);
  }
  buildMenu(){
@@ -87,7 +106,7 @@ export class PetView{
   p.addEventListener('popuphiding',()=>this.cancelGame());this.doc.getElementById('mainPopupSet').append(p);
  }
  buildHome(){
-  const home=this.sections.home;this.room=this.el('div',{class:'k-pet-room'});this.roomWindow=this.el('span',{class:'k-pet-window','aria-hidden':'true'});this.room.append(this.roomWindow);
+  const home=this.sections.home;this.room=this.el('div',{class:'k-pet-room'});
   this.preview=this.buttonEl('',()=>this.action('pet'),'k-pet-preview');this.preview.title=text('stroke');this.preview.setAttribute('aria-label',text('stroke'));this.previewFrame=this.el('span',{class:'k-pet-frame','aria-hidden':'true'});this.preview.append(this.previewFrame);this.room.append(this.preview);
   this.decor=this.el('div',{class:'k-pet-decor','aria-hidden':'true'});this.room.append(this.decor);home.append(this.room);this.thought=this.el('p',{class:'k-pet-thought'});home.append(this.thought);
   this.meters={};const needs=this.el('div',{class:'k-pet-needs'});for(const[key,label]of [['satiety','satiety'],['energy','energy'],['mood','mood'],['hygiene','hygiene']]){const row=this.el('label',{class:'k-pet-meter'}),meter=this.el('meter',{min:0,max:100,'aria-label':text(label)}),v=this.el('small');row.append(this.el('span',{},text(label)),meter,v);needs.append(row);this.meters[key]={meter,value:v};}home.append(needs);
@@ -115,7 +134,7 @@ export class PetView{
    const cells=[];let target=-1;const ends=now()+20000;
    const next=()=>{if(this.game?.token!==token)return;const old=target;do{target=Math.floor(Math.random()*9);}while(target===old);cells.forEach((b,i)=>{b.textContent=i===target?'✦':'·';b.classList.toggle('is-target',i===target);b.setAttribute('aria-label',text(i===target?'star':'empty'));});};
    for(let i=0;i<9;i++){const b=this.buttonEl('·',()=>{if(this.game?.token===token&&now()<ends&&i===target){this.game.score++;next();}});cells.push(b);grid.append(b);}
-   const clock=()=>{if(this.game?.token!==token)return;const left=Math.ceil((ends-now())/1000);this.gameInfo.textContent=text('score')+': '+this.game.score+' · '+text('seconds')+': '+Math.max(0,left)+' s';if(left<=0){this.finishGame();return;}this.later(clock,200);};
+   const clock=()=>{if(this.game?.token!==token)return;const left=Math.ceil((ends-now())/1000);this.gameInfo.textContent=text('score')+': '+this.game.score+' · '+text('seconds')+': '+Math.max(0,left)+' '+text('secondsSuffix');if(left<=0){this.finishGame();return;}this.later(clock,200);};
    const hop=()=>{if(this.game?.token!==token)return;next();this.later(hop,1100);};hop();clock();this.animate('happy',21000);
   }else{
    const values=['◆','●','★','♥','◆','●','★','♥'];for(let i=values.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[values[i],values[j]]=[values[j],values[i]];}
@@ -136,7 +155,7 @@ export class PetView{
  }
  renderShop(){
   if(!this.sections?.shop)return;const s=Pet.getState(),section=this.sections.shop;section.replaceChildren(this.el('h3',{},text('roomTitle')),this.el('p',{class:'k-pet-muted'},text('roomInfo')));
-  for(const[group,items]of [['rooms',ROOMS],['things',TOYS]]){section.append(this.el('h4',{},text(group)));const list=this.el('div',{class:'k-pet-shop'});for(const item of items){const owned=s.owned.includes(item.id),row=this.el('div',{class:'k-pet-shop-item'}),name=this.el('div');name.append(this.el('strong',{},text(item.id)),this.el('small',{},owned?text('owned'):item.price+' ◈'));const selected=s.room===item.id;const b=this.buttonEl(text(selected?'selected':owned?(group==='rooms'?'use':'owned'):'buy'),()=>this.action('buy',item.id));b.disabled=selected||(owned&&group==='things')||(!owned&&s.coins<item.price)||!s.named;row.append(name,b);list.append(row);}section.append(list);}
+  for(const[group,items]of [['rooms',ROOMS],['things',TOYS]]){section.append(this.el('h4',{},text(group)));const list=this.el('div',{class:'k-pet-shop'});for(const item of items){const owned=s.owned.includes(item.id),row=this.el('div',{class:'k-pet-shop-item'}),art=this.el('span',{class:'k-pet-shop-art k-pet-shop-art-'+item.id,'aria-hidden':'true'}),name=this.el('div');name.append(this.el('strong',{},text(item.id)),this.el('small',{},owned?text('owned'):item.price+' ◈'));const selected=s.room===item.id,shown=s.toys.includes(item.id);const label=selected?'selected':owned?(group==='rooms'?'use':shown?'hideDecoration':'showDecoration'):'buy';const b=this.buttonEl(text(label),()=>this.action(owned&&group==='things'?'decorate':'buy',item.id));b.disabled=selected||(!owned&&s.coins<item.price)||!s.named;row.append(art,name,b);list.append(row);}section.append(list);}
  }
  renderJournal(){
   if(!this.sections?.journal)return;const s=Pet.getState(),section=this.sections.journal;section.replaceChildren();const summary=this.el('div',{class:'k-pet-friendship'});for(const[label,value]of [['bond',Math.round(s.bond)+'%'],['health',s.health+'%'],['age',s.age],['streak',s.streak]]){const c=this.el('div');c.append(this.el('strong',{},String(value)),this.el('small',{},text(label)));summary.append(c);}section.append(summary,this.el('h3',{},text('achievements')));
@@ -144,9 +163,9 @@ export class PetView{
   const list=this.el('ol',{class:'k-pet-history'});for(const item of s.history){const li=this.el('li');let label=text('history_'+item.key);if(item.key==='achievement')label+=' · '+text('achievement_'+item.id);else if(item.id)label+=' · '+text(item.id);li.append(this.el('span',{},label),this.el('small',{},new Date(item.at).toLocaleDateString(Services.locale.appLocaleAsBCP47,{month:'short',day:'numeric'})));list.append(li);}if(!s.history.length)section.append(this.el('p',{},text('emptyJournal')));section.append(list);
  }
  renderState(s){
-  this.title.textContent=s.name||text('nameFirst');this.level.textContent=text('level')+' '+s.level+' · '+text(s.stage);this.wallet.textContent=s.coins+' ◈';this.wallet.title=text('coins');this.xpBar.value=s.xpProgress;this.xpBar.title=s.xpProgress+'/40 XP';for(const[k,n]of Object.entries(this.gameRecords))n.textContent=text('record')+': '+s.best[k];
-  this.room.dataset.room=s.room;this.room.toggleAttribute('data-sleeping',s.sleeping);this.thought.textContent=text(s.need);
-  this.decor.replaceChildren();for(const id of s.toys){const n=this.el('span',{class:'k-pet-decoration k-pet-decoration-'+id,title:text(id)},id==='yarn'?'◉':id==='plant'?'♧':'☼');this.decor.append(n);}
+  this.title.textContent=s.name||text('nameFirst');this.level.textContent=text('level')+' '+s.level;this.wallet.textContent=s.coins+' ◈';this.wallet.title=text('coins');this.xpBar.value=s.xpProgress;this.xpBar.title=s.xpProgress+'/40 XP';for(const[k,n]of Object.entries(this.gameRecords))n.textContent=text('record')+': '+s.best[k];
+  this.room.dataset.room=s.room;this.room.dataset.petMode=this.mode;this.room.toggleAttribute('data-sleeping',s.sleeping);this.thought.textContent=text(s.need);
+  const decorKey=s.toys.join(',');if(this.decorKey!==decorKey){this.decorKey=decorKey;this.decor.replaceChildren();for(const id of s.toys)this.decor.append(this.el('span',{class:'k-pet-decoration k-pet-decoration-'+id,title:text(id)}));}
   for(const[key,{meter,value}]of Object.entries(this.meters)){meter.value=Math.round(s[key]);value.textContent=Math.round(s[key])+'%';meter.dataset.low=String(s[key]<30);}
   for(const b of this.careButtons)b.disabled=!s.named;this.sleepButton.textContent=text(s.sleeping?'wake':'sleep');
   for(const[key,n]of Object.entries(this.tasks))n.textContent=(s.daily[key]?'✓ ':'○ ')+text(n.dataset.label);
@@ -154,5 +173,5 @@ export class PetView{
   if(this.doc.activeElement!==this.nameInput)this.nameInput.value=s.name;
   this.paint();
  }
- destroy(){this.cancelGame();this.win.clearInterval(this.timer);for(const k of [KEY,'kamputa.companion.enabled','sidebar.verticalTabs'])Services.prefs.removeObserver(k,this.observer);this.panel?.remove();}
+ destroy(){this.cancelGame();this.stopRoam();this.roamer.remove();for(const id of ['nav-bar','TabsToolbar'])this.doc.getElementById(id)?.removeEventListener('pointerenter',this.stopForInput);this.win.gURLBar?.inputField?.removeEventListener('focus',this.stopForInput);this.win.gBrowser.tabContainer.removeEventListener('TabOpen',this.onNewTab);this.win.clearInterval(this.timer);for(const k of [KEY,'kamputa.companion.enabled','kamputa.companion.wander','sidebar.verticalTabs'])Services.prefs.removeObserver(k,this.observer);this.panel?.remove();}
 }

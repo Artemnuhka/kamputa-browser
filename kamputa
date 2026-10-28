@@ -9,6 +9,12 @@ export KAMPUTA_PROFILE="$KAMPUTA_PROFILE_DIR"
 export MOZ_CRASHREPORTER_DISABLE=1
 export MOZ_APP_REMOTINGNAME=kamputa-browser
 export MOZ_APP_LAUNCHER="$KAMPUTA_ROOT/kamputa"
+# Prefer the native backend in Wayland sessions, including when a desktop's
+# inherited GDK_BACKEND forces X11. Explicit MOZ_ENABLE_WAYLAND=0 still wins.
+if [[ "${XDG_SESSION_TYPE:-}" == wayland && -n "${WAYLAND_DISPLAY:-}" && "${MOZ_ENABLE_WAYLAND:-1}" != 0 ]]; then
+  export MOZ_ENABLE_WAYLAND=1
+  export GDK_BACKEND=wayland,x11
+fi
 # A second launch forwards URLs to the existing profile without touching its files.
 if python3 - "$KAMPUTA_PROFILE_DIR" <<'PYREMOTE'
 import fcntl,sys

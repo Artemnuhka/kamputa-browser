@@ -106,3 +106,30 @@
 
 .k-pet-head progress { display:block; appearance:none; width:112px; height:3px; border:0; border-radius:3px; background:var(--k-field,#393b42); margin-top:8px; }
 .k-pet-head progress::-moz-progress-bar { background:var(--k-accent,#aec7fa); border-radius:3px; }
+
+/* Hand-drawn pixel rooms and furnishings; the cat remains the only control in the scene. */
+.k-pet-room,.k-pet-room[data-room=cozy] { background:#4a4246 url('resource://kamputa/assets/pet-room-cozy.svg') center/100% 100% no-repeat; image-rendering:pixelated; }
+.k-pet-room[data-room=garden] { background:#344b43 url('resource://kamputa/assets/pet-room-garden.svg') center/100% 100% no-repeat; }
+.k-pet-room[data-room=night] { background:#34374b url('resource://kamputa/assets/pet-room-night.svg') center/100% 100% no-repeat; }
+.k-pet-room::after { display:none; }
+.k-pet-room .k-pet-preview { bottom:10px; }
+.k-pet-decor { z-index:2; }
+.k-pet-decoration { position:absolute; display:block; width:32px; height:32px; background-size:contain; background-position:center; background-repeat:no-repeat; image-rendering:pixelated; }
+.k-pet-decoration-yarn { bottom:7px; left:24%; background-image:url('resource://kamputa/assets/pet-decor-yarn.svg'); }
+.k-pet-decoration-plant { bottom:26px; right:7%; background-image:url('resource://kamputa/assets/pet-decor-plant.svg'); }
+.k-pet-decoration-lamp { width:27px; height:27px; top:50px; right:10%; background-image:url('resource://kamputa/assets/pet-decor-lamp.svg'); }
+.k-pet-room[data-pet-mode=happy]::before,.k-pet-room[data-pet-mode=sleep]::before { content:''; position:absolute; z-index:3; width:4px; height:4px; top:34px; left:58%; pointer-events:none; background:#f3b4bc; box-shadow:-4px 0 #f3b4bc,4px 0 #f3b4bc,-4px -4px #f3b4bc,4px -4px #f3b4bc,0 4px #f3b4bc; animation:k-pet-float 2.2s ease-out infinite; }
+.k-pet-room[data-pet-mode=sleep]::before { background:#bbc9df; box-shadow:4px -4px #bbc9df,8px -4px #bbc9df,8px -8px #bbc9df; animation-duration:3.2s; }
+@keyframes k-pet-float { 0% { opacity:0; transform:translateY(5px); } 25% { opacity:.9; } 100% { opacity:0; transform:translateY(-12px); } }
+.k-pet-shop-art { flex:0 0 44px; width:44px; height:34px; border-radius:5px; background-size:100% 100%; background-repeat:no-repeat; image-rendering:pixelated; }
+.k-pet-shop-art-cozy { background-image:url('resource://kamputa/assets/pet-room-cozy.svg'); }
+.k-pet-shop-art-garden { background-image:url('resource://kamputa/assets/pet-room-garden.svg'); }
+.k-pet-shop-art-night { background-image:url('resource://kamputa/assets/pet-room-night.svg'); }
+.k-pet-shop-art-yarn { background-image:url('resource://kamputa/assets/pet-decor-yarn.svg'); background-size:contain; background-position:center; }
+.k-pet-shop-art-plant { background-image:url('resource://kamputa/assets/pet-decor-plant.svg'); background-size:contain; background-position:center; }
+.k-pet-shop-art-lamp { background-image:url('resource://kamputa/assets/pet-decor-lamp.svg'); background-size:contain; background-position:center; }
+.k-pet-shop-item > div { flex:1; min-width:0; }
+.k-pet-roamer { position:fixed; z-index:2147483645; display:block; width:56px; height:32px; overflow:hidden; pointer-events:none; transition:left .18s linear; }
+.k-pet-roamer[hidden] { display:none !important; }
+#kamputa-companion[data-pet-mode=happy]::before { content:''; position:absolute; right:25px; top:4px; width:3px; height:3px; background:#efabb5; box-shadow:-3px 0 #efabb5,3px 0 #efabb5,-3px -3px #efabb5,3px -3px #efabb5,0 3px #efabb5; pointer-events:none; animation:k-pet-float 2s ease-out; }
+@media (prefers-reduced-motion:reduce) { .k-pet-room::before,#kamputa-companion::before { animation:none !important; } .k-pet-roamer { display:none !important; } }

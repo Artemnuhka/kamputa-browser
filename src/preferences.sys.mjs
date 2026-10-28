@@ -20,7 +20,7 @@ export class NativeSettings {
   const appearance=doc.querySelector('setting-pane[data-category="paneAppearance"] section');
   if(appearance&&!doc.getElementById('kamputa-pet-settings')){
    const c=this.card('Питомец','Он живёт в верхней панели. Нажми на него, чтобы покормить, поиграть, уложить спать или поменять имя.');c.id='kamputa-pet-settings';
-   this.checkbox(c,'Показывать питомца','kamputa.companion.enabled','petEnabled');c.append(this.button('Открыть питомца',()=>this.query('Kamputa:OpenPet')));appearance.append(c);
+   this.checkbox(c,'Показывать питомца','kamputa.companion.enabled','petEnabled');this.checkbox(c,'Разрешить прогулки по панели','kamputa.companion.wander','petWander');c.append(this.button('Открыть питомца',()=>this.query('Kamputa:OpenPet')));appearance.append(c);
   }
   const tabs=doc.querySelector('setting-pane[data-category="paneTabsBrowsing"] section');
   if(tabs&&!doc.getElementById('kamputa-memory-settings')){

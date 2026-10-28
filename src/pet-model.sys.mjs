@@ -23,7 +23,7 @@ export function migratePet(raw,at=Date.now()){
   history:Array.isArray(r.history)?r.history.filter(x=>x&&typeof x.key==='string'&&Number.isFinite(x.at)).slice(0,24):[],
   daily:r.daily&&Number.isFinite(r.daily.day)?{day:r.daily.day,feed:!!r.daily.feed,clean:!!r.daily.clean,game:!!r.daily.game,claimed:!!r.daily.claimed}:{day:day(at),feed:false,clean:false,game:false,claimed:false},
   visitDay:number(r.visitDay,-1),streak:clamp(number(r.streak),0,100000)};
- s.toys=TOYS.filter(x=>s.owned.includes(x.id)).map(x=>x.id);if(!s.owned.includes(s.room))s.room='cozy';daily(s,at);return s;
+ s.toys=TOYS.filter(x=>s.owned.includes(x.id)&&(!Array.isArray(r.toys)||r.toys.includes(x.id))).map(x=>x.id);if(!s.owned.includes(s.room))s.room='cozy';daily(s,at);return s;
 }
 function achievements(s,at){
  for(const [key,earned]of [['named',s.named],['care',Math.min(s.satiety,s.energy,s.mood,s.hygiene)>=80],['gamer',s.games>=10],['friend',s.bond>=75],['collector',s.owned.length>=4],['week',s.streak>=7]]){
@@ -45,7 +45,7 @@ export function petSnapshot(s,at=Date.now()){
   need:s.sleeping?'sleeping':s.energy<25?'tired':s.satiety<35?'hungry':s.hygiene<35?'dirty':s.mood<40?'bored':s.bond>=75?'loved':'content'};
 }
 export function canPlay(s,at=Date.now()){
- if(!s.named)return 'nameFirst';if(s.sleeping)return 'sleepFirst';if(s.energy<20)return 'tiredGame';if(s.satiety<20)return 'hungryGame';if(at-s.last.game<60000)return 'gameRest';return null;
+ if(!s.named)return 'nameFirst';if(s.sleeping)return 'sleepFirst';if(s.energy<20)return 'tiredGame';if(s.satiety<20)return 'hungryGame';if(at-s.last.game<30000)return 'gameRest';return null;
 }
 // admittedGame is supplied only after the adapter validates a live game token.
 export function performPetAction(s,action,value,at=Date.now(),admittedGame=false){
@@ -56,11 +56,11 @@ export function performPetAction(s,action,value,at=Date.now(),admittedGame=false
  }else if(action==='visit'){
   if(s.named&&s.visitDay!==day(at)){s.streak=s.visitDay===day(at)-1?s.streak+1:1;s.visitDay=day(at);s.coins+=5;event(s,'visit',at);message='welcomeGift';}else message='hello';
  }else if(action==='feed'){
-  if(s.sleeping)return {message:'sleepFirst'};if(at-s.last.feed<45000)return {message:'eating'};if(s.satiety>=94)return {message:'full'};
+  if(s.sleeping)return {message:'sleepFirst'};if(at-s.last.feed<45000)return {message:'eating'};if(s.satiety>=94&&s.daily.feed)return {message:'full'};
   const food=FOODS[value];if(!food)return {message:'unknown'};if(s.coins<food.price)return {message:'noCoins'};
   s.coins-=food.price;s.satiety=clamp(s.satiety+food.satiety);s.mood=clamp(s.mood+food.mood);s.last.feed=at;s.xp+=3;s.bond=clamp(s.bond+1);s.daily.feed=true;message='fed';animation='eat';event(s,'feed',at,{id:value});
  }else if(action==='clean'){
-  if(s.sleeping)return {message:'sleepFirst'};if(at-s.last.clean<90000)return {message:'alreadyClean'};if(s.hygiene>=96)return {message:'alreadyClean'};
+  if(s.sleeping)return {message:'sleepFirst'};if(at-s.last.clean<90000)return {message:'alreadyClean'};if(s.hygiene>=96&&s.daily.clean)return {message:'alreadyClean'};
   s.hygiene=clamp(s.hygiene+40);s.mood=clamp(s.mood+5);s.last.clean=at;s.daily.clean=true;s.xp+=3;message='cleaned';event(s,'clean',at);
  }else if(action==='pet'){
   if(s.sleeping)return {message:'dreaming'};if(at-s.last.pet<15000)return {message:'purr'};
@@ -80,6 +80,10 @@ export function performPetAction(s,action,value,at=Date.now(),admittedGame=false
   const item=[...ROOMS,...TOYS].find(x=>x.id===value);if(!item)return {message:'unknown'};
   if(s.owned.includes(item.id)){if(ROOMS.includes(item)){s.room=item.id;message='roomChanged';}else message='owned';}
   else{if(s.coins<item.price)return {message:'noCoins'};s.coins-=item.price;s.owned.push(item.id);if(ROOMS.includes(item))s.room=item.id;else s.toys.push(item.id);message='bought';event(s,'purchase',at,{id:item.id});}
+ }else if(action==='decorate'){
+  if(!TOYS.some(item=>item.id===value)||!s.owned.includes(value))return {message:'unknown'};
+  if(s.toys.includes(value)){s.toys=s.toys.filter(id=>id!==value);message='decorationHidden';}
+  else{s.toys.push(value);message='decorationShown';}
  }else if(action==='claim'){
   if(s.daily.claimed)return {message:'claimed'};if(!s.daily.feed||!s.daily.clean||!s.daily.game)return {message:'notReady'};
   s.daily.claimed=true;s.coins+=20;s.xp+=10;reward=20;message='dailyReward';event(s,'daily',at);
