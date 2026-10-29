@@ -1,0 +1,6 @@
+{
+  "version": 1,
+  "items": [
+    { "id": "default-cat", "category": "pets", "name": "Котик в худи", "description": "Первый друг kamputa browser", "image": "assets/cat.png", "default": true }
+  ]
+}
