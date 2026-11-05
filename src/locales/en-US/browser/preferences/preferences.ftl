@@ -774,6 +774,9 @@ settings-keyboard-shortcuts-group =
 settings-keyboard-shortcuts-customkeys-link =
     .label = Customize keyboard shortcuts
 
+settings-keyboard-shortcuts-addressbar-link =
+    .label = Customize address bar settings in Search
+
 settings-media-group =
     .label = Media
 
@@ -902,6 +905,12 @@ search-separate-default-engine-2 =
 
 search-separate-default-engine-dropdown =
     .aria-label = Default search engine in private windows
+
+addressbar-navigation-group =
+    .label = Address bar navigation
+
+addressbar-skip-result-menu-on-tab =
+    .label = Skip the results menu when using the tab key to move focus
 
 search-suggestions-header-2 =
     .label = Search engine suggestions
@@ -1178,6 +1187,10 @@ prefs-syncing-off-2 =
     .label = Syncing is OFF
     .description = Turn on sync to get your bookmarks, passwords, history, and more on any device.
 
+prefs-syncing-off-3 =
+    .label = Syncing is OFF
+    .description = Turn on sync to get your bookmarks, passwords, history, and more on this device.
+
 prefs-sync-turn-on-syncing =
     .label = Turn on syncing…
     .accesskey = s
@@ -1208,9 +1221,15 @@ sync-syncing-across-devices-heading = You are syncing these items across all you
 
 sync-syncing-across-devices-heading-2 = Data synced across devices
 
+sync-syncing-across-devices-heading-3 = Data syncing on this device
+
 sync-syncing-across-devices-empty-state2 =
     .label = Manage synced data
     .description = You aren’t syncing anything… yet. Start syncing to get all of your data on all your devices.
+
+sync-syncing-across-devices-empty-state3 =
+    .label = Manage synced data
+    .description = You aren’t syncing anything… yet. Choose what to sync on this device.
 
 sync-currently-syncing-bookmarks = Bookmarks
 sync-currently-syncing-history = History
@@ -1235,6 +1254,14 @@ settings-sync-disconnect-button =
 
 sync-choose-what-to-sync-dialog4 =
     .title = Manage what syncs on all your connected devices
+    .style = min-width: 36em;
+    .buttonlabelaccept = Save
+    .buttonaccesskeyaccept = S
+    .buttonlabelextra2 = Disconnect…
+    .buttonaccesskeyextra2 = D
+
+sync-choose-what-to-sync-dialog5 =
+    .title = Manage what syncs on this device
     .style = min-width: 36em;
     .buttonlabelaccept = Save
     .buttonaccesskeyaccept = S
@@ -1431,6 +1458,9 @@ autofill-payment-methods-manage-payments-button =
 autofill-reauth-payment-methods-checkbox-2 =
     .label = Require device sign in to autofill and manage payment methods
     .accesskey = o
+autofill-payment-methods-save-security-codes-checkbox =
+    .label = Save security codes
+    .accesskey = c
 
 autofill-payment-methods-add-button = Add new payment method
 payments-list-header =

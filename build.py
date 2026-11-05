@@ -53,7 +53,7 @@ defaults={'intl.locale.requested':'ru','browser.tabs.inTitlebar':1,'browser.uide
 'browser.urlbar.suggest.bookmark':False,'browser.urlbar.scotchBonnet.enableOverride':False,
 'browser.startup.page':3,'browser.link.open_newwindow.override.external':3,'browser.aboutwelcome.enabled':False,'browser.translations.automaticallyPopup':False,
 'kamputa.theme':'chromium','kamputa.memory.enabled':True,'kamputa.memory.auto':False,
-'kamputa.memory.thresholdMB':350,'kamputa.memory.idleMinutes':15}
+'kamputa.memory.thresholdMB':350,'kamputa.memory.idleMinutes':5}
 (dest/'defaults/pref/kamputa-defaults.js').write_text('\n'.join(f'pref({json.dumps(k)}, {json.dumps(v)});' for k,v in defaults.items())+'\n')
 meta=json.loads((ROOT/'BUILD.json').read_text());meta['ublock_sha256']=hashlib.sha256(xpi.read_bytes()).hexdigest()
 (ROOT/'BUILD.json').write_text(json.dumps(meta,indent=2)+'\n')

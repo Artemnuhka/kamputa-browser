@@ -236,10 +236,8 @@
  overflow-wrap:anywhere;
 }
 
-/* Memory suggestion follows its tab and uses the current palette. */
-#k-toast { --panel-background:var(--k-surface,#292c33); --panel-color:var(--k-text,#e2e2ea); --panel-border-color:var(--k-border,#41454f); }
-#k-toast .panel-arrowcontent { padding:0 !important; background:var(--k-surface,#292c33) !important; color:var(--k-text,#e2e2ea) !important; border:1px solid var(--k-border,#41454f) !important; border-radius:14px !important; box-shadow:0 8px 28px #0006 !important; }
-#k-toast .k-memory-card { box-sizing:border-box; width:310px; max-width:calc(100vw - 32px); padding:16px; color:var(--k-text,#e2e2ea); font:13px system-ui; }
+/* The suggestion is part of the browser window, never a separate popup. */
+#k-toast { position:fixed; z-index:2147483647; inset:auto 16px 16px auto; box-sizing:border-box; width:310px; max-width:calc(100vw - 32px); padding:16px; color:var(--k-text,#e2e2ea); background:var(--k-surface,#292c33); border:1px solid var(--k-border,#41454f); border-radius:14px; box-shadow:0 8px 28px #0006; font:13px system-ui; }
 #k-toast .k-memory-card * { box-sizing:border-box; }
 #k-toast .k-memory-header { display:flex; align-items:center; justify-content:space-between; gap:10px; }
 #k-toast .k-memory-header strong { font-size:14px; }

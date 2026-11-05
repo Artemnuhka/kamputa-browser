@@ -257,30 +257,40 @@
     let scanning=false;
     const dismissedKey='kamputa.memory.dismissed';
     function dismissed(tab){return SessionStore.getCustomTabValue(tab,dismissedKey)==='1';}
+    // A chrome document element stays inside its browser window, unlike a XUL popup.
     function memoryPrompt(candidate,bytes){
-      const panel=doc.createXULElement('panel');panel.id='k-toast';panel.setAttribute('type','arrow');panel.setAttribute('role','dialog');panel.setAttribute('aria-label',t('Экономия памяти'));
       const el=(tag,cls,label)=>{const node=doc.createElementNS('http://www.w3.org/1999/xhtml',tag);if(cls)node.className=cls;if(label!==undefined)node.textContent=label;return node;};
-      const card=el('div','k-memory-card'),header=el('div','k-memory-header'),title=el('strong','',t('Освободить память?'));
-      const close=el('button','k-memory-close','×');close.type='button';close.title=t('Не предлагать для этой вкладки');close.setAttribute('aria-label',close.title);
-      header.append(title,close);card.append(header,el('div','k-memory-tab',candidate.label),el('p','',t('Вкладка давно не используется и занимает около {memory} МБ.').replace('{memory}',String(Math.round(bytes/1048576)))));
-      const actions=el('div','k-memory-actions'),decline=el('button','k-memory-decline',t('Не предлагать')),accept=el('button','k-memory-accept',t('Деактивировать'));decline.type=accept.type='button';actions.append(decline,accept);card.append(actions);panel.append(card);
-      let accepted=false;
-      const hide=()=>panel.hidePopup();
-      close.addEventListener('click',hide);decline.addEventListener('click',hide);
-      accept.addEventListener('click',async()=>{accepted=true;accept.disabled=true;api.cooldown.set(candidate,Date.now());const ok=await discard(candidate).catch(Cu.reportError);hide();if(!ok)win.alert(t('Вкладка сейчас используется или защищена от выгрузки.'));});
-      panel.addEventListener('popuphiding',()=>{if(!accepted&&candidate.isConnected&&!candidate.closing)SessionStore.setCustomTabValue(candidate,dismissedKey,'1');},{once:true});
-      panel.addEventListener('popuphidden',()=>panel.remove(),{once:true});
-      doc.getElementById('mainPopupSet').append(panel);panel.openPopup(candidate,'after_start',0,4,false,false);
+      const panel=el('div','k-memory-card');panel.id='k-toast';panel.setAttribute('role','region');panel.setAttribute('aria-label',t('Экономия памяти'));
+      const header=el('div','k-memory-header'),title=el('strong','',t('Освободить память?'));
+      const close=el('button','k-memory-close','×');close.type='button';close.title=t('Позже');close.setAttribute('aria-label',close.title);
+      const description=Number.isFinite(bytes)?t('Вкладка давно не используется и занимает около {memory} МБ.').replace('{memory}',String(Math.round(bytes/1048576))):t('Вкладка давно не используется. При возвращении она загрузится заново.');
+      header.append(title,close);panel.append(header,el('div','k-memory-tab',candidate.label),el('p','',description));
+      const actions=el('div','k-memory-actions'),decline=el('button','k-memory-decline',t('Не предлагать для этой вкладки')),accept=el('button','k-memory-accept',t('Деактивировать'));decline.type=accept.type='button';actions.append(decline,accept);panel.append(actions);
+      const hide=()=>{panel.remove();win.removeEventListener('blur',hide);gb.tabContainer.removeEventListener('TabSelect',check);gb.tabContainer.removeEventListener('TabClose',check);};
+      const check=()=>{if(!eligible(candidate))hide();};
+      close.addEventListener('click',hide);
+      decline.addEventListener('click',()=>{if(candidate.isConnected&&!candidate.closing)SessionStore.setCustomTabValue(candidate,dismissedKey,'1');hide();});
+      accept.addEventListener('click',async()=>{accept.disabled=true;api.cooldown.set(candidate,Date.now());await discard(candidate).catch(Cu.reportError);hide();});
+      win.addEventListener('blur',hide);gb.tabContainer.addEventListener('TabSelect',check);gb.tabContainer.addEventListener('TabClose',check);
+      doc.documentElement.append(panel);
     }
     async function scan(){
       if(!pref.getBoolPref('kamputa.memory.enabled',true) || PrivateBrowsingUtils.isWindowPrivate(win))return;
-      if(scanning || doc.getElementById('k-toast') || overlay)return;scanning=true;
+      if(scanning || doc.getElementById('k-toast') || overlay)return;
+      const auto=pref.getBoolPref('kamputa.memory.auto',false);
+      // Do not interrupt another application or repeat a suggestion in another window.
+      if(!auto && (Services.focus.activeWindow!==win || Date.now()/1000-pref.getIntPref('kamputa.memory.lastPrompt',0)<1800))return;
+      scanning=true;
       try{
-      await sampleMemory();if(win.closed || doc.getElementById('k-toast') || overlay)return;
-      const threshold=pref.getIntPref('kamputa.memory.thresholdMB',350)*1024*1024,idle=pref.getIntPref('kamputa.memory.idleMinutes',15)*60000,now=Date.now();
-      const candidates=[...gb.tabs].filter(t=>eligible(t) && !dismissed(t) && now-Math.max(t.lastAccessed||now,api.lastUsed.get(t)||0)>=idle && (api.memory.get(t)||0)>=threshold && now-(api.cooldown.get(t)||0)>1800000).sort((a,b)=>api.memory.get(b)-api.memory.get(a));
+      try{await sampleMemory();}catch(e){Cu.reportError(e);api.memory=new Map();}
+      if(win.closed || doc.getElementById('k-toast') || overlay || (!auto && Services.focus.activeWindow!==win))return;
+      const idle=pref.getIntPref('kamputa.memory.idleMinutes',5)*60000,now=Date.now();
+      const candidates=[...gb.tabs].filter(t=>eligible(t) && !dismissed(t) && now-Math.max(t.lastAccessed||0,api.lastUsed.get(t)||0)>=idle && now-(api.cooldown.get(t)||0)>1800000).sort((a,b)=>(api.memory.get(b)||0)-(api.memory.get(a)||0));
       const candidate=candidates[0];if(!candidate)return;
-      if(pref.getBoolPref('kamputa.memory.auto',false)){api.cooldown.set(candidate,now);await discard(candidate);return;}
+      if(auto){api.cooldown.set(candidate,now);await discard(candidate);return;}
+      // Recheck after the asynchronous memory sample to avoid simultaneous prompts.
+      if(now/1000-pref.getIntPref('kamputa.memory.lastPrompt',0)<1800)return;
+      pref.setIntPref('kamputa.memory.lastPrompt',Math.floor(now/1000));
       memoryPrompt(candidate,api.memory.get(candidate));
       }finally{scanning=false;}
     }
@@ -311,6 +321,8 @@
     tabPanel.activate=function(tab){updatePreviewMemory(tab);return activatePreview.call(this,tab);};
     preview.addEventListener('popuphidden',()=>{previewTab=null;++previewVersion;});
     preview.addEventListener('TabPreviewUpdated',()=>{if(previewTab?.isConnected)renderPreviewMemory(previewTab);});
+    for(const tab of gb.tabs)if(!tab.lastAccessed)api.lastUsed.set(tab,Date.now());
+    gb.tabContainer.addEventListener('TabOpen',event=>api.lastUsed.set(event.target,Date.now()));
     gb.tabContainer.addEventListener('TabSelect',()=>api.lastUsed.set(gb.selectedTab,Date.now()));
     const updateTimer=win.setTimeout(()=>{if(!PrivateBrowsingUtils.isWindowPrivate(win))Updates.autoCheck();},15000);
     const timer=win.setInterval(()=>scan().catch(Cu.reportError),30000);

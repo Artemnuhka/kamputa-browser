@@ -26,7 +26,7 @@ export class NativeSettings {
   if(tabs&&!doc.getElementById('kamputa-memory-settings')){
    const c=this.card('Экономия памяти','Неиспользуемую тяжёлую вкладку можно деактивировать. При возвращении страница загрузится заново.');c.id='kamputa-memory-settings';
    this.checkbox(c,'Предлагать деактивацию неактивных вкладок','kamputa.memory.enabled','memoryEnabled');this.checkbox(c,'Деактивировать автоматически','kamputa.memory.auto','memoryAuto');
-   for(const[key,field,label,min,max]of [['kamputa.memory.thresholdMB','thresholdMB','Порог памяти, МБ',50,16384],['kamputa.memory.idleMinutes','idleMinutes','Неактивность, минут',1,1440]]){
+   for(const[key,field,label,min,max]of [['kamputa.memory.idleMinutes','idleMinutes','Неактивность, минут',1,1440]]){
     const row=this.node('label',{class:'k-native-option'},label),n=this.node('input',{type:'number',min,max});row.append(n);c.append(row);this.inputs.set(field,n);n.addEventListener('change',()=>this.set(key,Number(n.value)));
    }
    c.append(this.node('small',{},'Показано приблизительное потребление памяти. Текущие, закреплённые и приватные вкладки, музыка, видео и звонки защищены.'));const error=this.node('div',{class:'k-native-status',role:'status'});c.append(error);this.errors.push(error);tabs.append(c);

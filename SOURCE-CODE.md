@@ -1,20 +1,20 @@
 # Corresponding source and modifications
 
-## kamputa browser 0.7.0
+## kamputa browser 0.7.1
 
 All Kamputa modifications are available in preferred source form under MPL 2.0 at:
-https://github.com/Artemnuhka/kamputa-browser/tree/v0.7.0
+https://github.com/Artemnuhka/kamputa-browser/tree/v0.7.1
 
-The release also includes `kamputa-browser-0.7.0-source.tar.xz`. Source files are not minified. `src/` contains the privileged browser UI and localization modifications. `assets/` contains the original project PNG / SVG resources used to generate branding; `brand-runtime.py`, `normalize-jars.py`, `prepare-locales.py`, `build.py` and `packaging/` describe the transformations and packaging. No developer profiles or local test harnesses are included.
+The release also includes `kamputa-browser-0.7.1-source.tar.xz`. Source files are not minified. `src/` contains the privileged browser UI and localization modifications. `assets/` contains the original project PNG / SVG resources used to generate branding; `brand-runtime.py`, `normalize-jars.py`, `prepare-locales.py`, `build.py` and `packaging/` describe the transformations and packaging. No developer profiles or local test harnesses are included.
 
-## Mozilla Firefox / Gecko 158.0.1
+## Mozilla Firefox / Gecko 159.0.1
 
 The engine executables are the unmodified official Mozilla Linux x86_64 binaries. No openSUSE engine build or distro-specific binary patch is distributed. The presentation archives are modified by the published scripts and localization overrides.
 
 Exact upstream source (MPL 2.0 and the component licenses included there):
-https://archive.mozilla.org/pub/firefox/releases/158.0.1/source/firefox-158.0.1.source.tar.xz
+https://archive.mozilla.org/pub/firefox/releases/159.0.1/source/firefox-159.0.1.source.tar.xz
 
-Exact source revision: `48a735cc74a7e6d730f9bf59c3de58f750287a23` in Mozilla's release repository. `BUILD.json` records the upstream source archive's SHA-512, binary URL / checksum, and Russian language-pack checksum. Mozilla's full license notices remain accessible in the browser through `about:license`.
+Exact source revision: `7b34a03a910d0385299f4a9f27aa585a786862d8` in Mozilla's release repository. `BUILD.json` records the upstream source archive's SHA-512, binary URL / checksum, and Russian language-pack checksum. Mozilla's full license notices remain accessible in the browser through `about:license`.
 
 ## uBlock Origin 1.75.0
 
